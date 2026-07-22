@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nafas Enterprise System | نظام إدارة نفَس</title>
+    <title>Nafas Enterprise System | نظام إدارة النفَس</title>
     <!-- مكتبة أكسل -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- خط Tajawal -->
@@ -47,7 +47,6 @@
             display: flex; height: 100vh; overflow: hidden;
         }
 
-        /* Glassmorphism & Card Effects */
         .glass-panel {
             background: var(--bg-card);
             backdrop-filter: blur(20px);
@@ -57,7 +56,6 @@
             box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
         }
 
-        /* Login Screen */
         #login-screen { position: fixed; inset: 0; z-index: 999; background: var(--bg-dark); display: flex; justify-content: center; align-items: center; }
         .login-card {
             width: 400px; padding: 45px 35px; border-radius: 28px;
@@ -65,10 +63,8 @@
         }
         .login-logo { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--accent-gold); margin-bottom: 20px; box-shadow: 0 0 25px rgba(243, 156, 18, 0.3); }
 
-        /* Layout */
         .app-layout { display: flex; width: 100%; height: 100%; }
         
-        /* Sidebar */
         .sidebar {
             width: 280px; background: rgba(11, 15, 25, 0.95); backdrop-filter: blur(25px);
             border-left: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column;
@@ -91,46 +87,37 @@
 
         .user-profile {
             background: rgba(255,255,255,0.03); padding: 14px 16px; border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
         }
 
-        /* Main Content Panel */
         .main-content { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
 
-        /* Top Header Bar */
         .top-bar {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 22px; border-radius: 18px;
         }
         .status-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--success); background: rgba(16, 185, 129, 0.1); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.2); }
 
-        /* Dashboard Cards */
         .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
-        .dash-card {
-            padding: 20px; border-radius: 20px; position: relative; overflow: hidden;
-        }
+        .dash-card { padding: 20px; border-radius: 20px; position: relative; overflow: hidden; }
         .dash-card:hover { transform: translateY(-4px); border-color: var(--border-glow); box-shadow: 0 15px 30px -10px rgba(0,0,0,0.6); }
         .dash-card h3 { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin: 0 0 8px 0; text-transform: uppercase; }
         .dash-card .amount { font-size: 24px; font-weight: 800; color: var(--text-primary); }
 
-        /* Low Stock Alert Box */
         .alert-box {
             background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3);
             border-radius: 16px; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;
         }
 
-        /* Report Controls Bar */
         .report-filter-bar {
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07);
             border-radius: 16px; padding: 16px; margin-bottom: 18px; display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end;
         }
 
-        /* Cards & Containers */
         .card { padding: 24px; border-radius: 22px; }
         .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 12px; }
         h2 { margin: 0; font-size: 19px; font-weight: 800; color: var(--accent-gold); display: flex; align-items: center; gap: 8px; }
 
-        /* Price Lookup Grid */
         .price-lookup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 18px; margin-top: 18px; }
         .price-item-card {
             background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);
@@ -140,7 +127,6 @@
         .price-row-detail { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.06); }
         .price-row-detail:last-child { border-bottom: none; }
 
-        /* POS Visual Grid */
         .pos-container { display: grid; grid-template-columns: 2.2fr 1.2fr; gap: 20px; }
         .pos-items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
         .pos-card {
@@ -152,7 +138,6 @@
         .pos-card h4 { margin: 8px 0 5px 0; font-size: 14px; font-weight: 700; color: #fff; }
         .pos-card .price { font-size: 13px; font-weight: 800; color: var(--success); }
 
-        /* Cart Box Styling */
         .cart-box {
             background: rgba(12, 16, 26, 0.9); border: 1px solid var(--border-glow);
             border-radius: 22px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;
@@ -160,7 +145,6 @@
         .cart-items { flex: 1; overflow-y: auto; max-height: 400px; margin-bottom: 15px; padding-left: 5px; }
         .cart-item-row { background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 14px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.06); }
 
-        /* Table & Badges Styling */
         table { width: 100%; border-collapse: separate; border-spacing: 0 6px; margin-top: 8px; font-size: 13.5px; }
         th { padding: 10px 14px; color: var(--text-secondary); font-weight: 700; text-align: right; font-size: 12.5px; }
         td { padding: 12px 14px; background: rgba(255,255,255,0.02); text-align: right; border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.04); }
@@ -168,7 +152,6 @@
         td:first-child { border-radius: 0 12px 12px 0; }
         td:last-child { border-radius: 12px 0 0 12px; }
 
-        /* Status Badges */
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; }
         .badge-gold { background: rgba(243, 156, 18, 0.15); color: var(--accent-gold); border: 1px solid rgba(243, 156, 18, 0.3); }
         .badge-success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
@@ -176,10 +159,8 @@
         .badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
         .badge-info { background: rgba(59, 130, 246, 0.15); color: var(--info); border: 1px solid rgba(59, 130, 246, 0.3); }
 
-        /* Notification Badge on Sidebar */
         .notify-badge { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); background: var(--danger); color: #fff; border-radius: 50%; padding: 2px 7px; font-size: 11px; font-weight: 800; }
 
-        /* Forms & Inputs */
         .form-group { margin-bottom: 12px; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         label { display: block; margin-bottom: 5px; font-size: 12.5px; color: var(--text-secondary); font-weight: 700; }
@@ -190,7 +171,6 @@
         }
         input:focus, select:focus { border-color: var(--accent-gold); box-shadow: 0 0 12px rgba(243, 156, 18, 0.3); }
 
-        /* Buttons */
         button { padding: 10px 18px; border: none; border-radius: 10px; font-size: 13.5px; font-weight: 800; cursor: pointer; color: #fff; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
         .btn-primary { background: var(--gradient-accent); box-shadow: 0 6px 18px -4px rgba(243, 156, 18, 0.4); }
         .btn-success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 6px 18px -4px rgba(16, 185, 129, 0.4); }
@@ -202,11 +182,20 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Receipt Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 1000; display: none; justify-content: center; align-items: center; }
         .receipt-card { background: #fff; color: #1e293b; width: 350px; padding: 25px; border-radius: 16px; font-family: 'Tajawal', sans-serif; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
 
-        /* Print Media Styles */
+        /* ✨ تنسيق شريط الحقوق بالسيدبار */
+        .sidebar-footer {
+            padding: 10px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            line-height: 1.5;
+        }
+        .sidebar-footer strong { color: var(--accent-gold); }
+
         @media print {
             body * { visibility: hidden; }
             #receipt-modal, #receipt-modal *, #print-online-invoice-modal, #print-online-invoice-modal * { visibility: visible; }
@@ -259,25 +248,32 @@
                 </div>
             </div>
 
-            <div class="user-profile">
-                <div>
-                    <strong id="logged-user-email" style="font-size: 12px; color: #fff;">...</strong>
-                    <small id="logged-user-role" style="color: var(--accent-gold); display:block; font-weight:700;">...</small>
+            <div>
+                <div class="user-profile">
+                    <div>
+                        <strong id="logged-user-email" style="font-size: 12px; color: #fff;">...</strong>
+                        <small id="logged-user-role" style="color: var(--accent-gold); display:block; font-weight:700;">...</small>
+                    </div>
+                    <button class="btn-danger btn-table" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
                 </div>
-                <button class="btn-danger btn-table" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
+
+                <!-- ✨ حقوق المطور بالسيدبار مع معلوماتك -->
+                <div class="sidebar-footer">
+                    <div>Designed by <strong>Wahby</strong></div>
+                    <div>📧 wahby.razaq100@gmail.com</div>
+                    <div>📞 07811880089</div>
+                </div>
             </div>
         </div>
 
         <!-- Main Content Panel -->
         <div class="main-content">
             
-            <!-- Top Status Bar -->
             <div class="top-bar glass-panel">
                 <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح</div>
                 <div style="font-size:13px; color:var(--text-secondary); font-weight:700;" id="live-clock">--:--:--</div>
             </div>
 
-            <!-- Low Stock Alert Box -->
             <div id="low-stock-alert-container" class="alert-box" style="display: none;">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <i class="fa-solid fa-triangle-exclamation" style="color: var(--warning); font-size: 20px;"></i>
@@ -289,7 +285,6 @@
                 <span class="badge badge-warning" id="low-stock-count-badge">0 مواد</span>
             </div>
 
-            <!-- Analytics Dashboard (Admin) -->
             <div class="dash-grid admin-only">
                 <div class="dash-card glass-panel"><h3>مبيعات اليوم النقدية</h3><div class="amount" id="dash-sales-today" style="color: var(--success);">0 د.ع</div></div>
                 <div class="dash-card glass-panel"><h3>صافي أرباح اليوم</h3><div class="amount" id="dash-profit-today" style="color: var(--info);">0 د.ع</div></div>
@@ -297,7 +292,7 @@
                 <div class="dash-card glass-panel"><h3>مصاريف المحل</h3><div class="amount" id="dash-expenses-today" style="color: var(--accent-gold);">0 د.ع</div></div>
             </div>
 
-            <!-- الصفحة الرئيسية الأولى: الاستعلام السريع عن الأسعار -->
+            <!-- الاستعلام السريع -->
             <div id="price-lookup-tab" class="tab-content active">
                 <div class="card glass-panel">
                     <div class="card-header-flex">
@@ -313,7 +308,7 @@
                 </div>
             </div>
 
-            <!-- 🛍️ تبويب طلبات الأونلاين المباشرة من المتجر -->
+            <!-- طلبات الأونلاين -->
             <div id="online-orders-tab" class="tab-content">
                 <div class="card glass-panel">
                     <div class="card-header-flex">
@@ -349,7 +344,6 @@
                         <div class="pos-items-grid" id="pos-cards-box"></div>
                     </div>
 
-                    <!-- Cart Box -->
                     <div class="cart-box">
                         <h3 style="margin:0 0 12px 0; font-size:17px; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-cart-shopping" style="color: var(--accent-gold);"></i> سلة البيع المباشرة</h3>
                         <div class="cart-items" id="cart-items-list">
@@ -422,7 +416,7 @@
                 </div>
             </div>
 
-            <!-- Sales Tab with Date Filter Reports -->
+            <!-- Sales Tab -->
             <div id="sales-tab" class="tab-content">
                 <div class="card glass-panel">
                     <div class="card-header-flex">
@@ -502,7 +496,7 @@
                 </div>
             </div>
 
-            <!-- Definitions / Customize -->
+            <!-- Definitions -->
             <div id="customize-tab" class="tab-content admin-only">
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px;">
                     <div class="card glass-panel">
@@ -544,7 +538,7 @@
         </div>
     </div>
 
-    <!-- Receipt Modal الكاشير -->
+    <!-- Receipt Modal -->
     <div class="modal-overlay" id="receipt-modal">
         <div>
             <div class="receipt-card" id="receipt-modal-card">
@@ -586,7 +580,7 @@
         </div>
     </div>
 
-    <!-- 🧾 نافذة طباعة فاتورة طلب الأونلاين -->
+    <!-- نافذة طباعة فاتورة أونلاين -->
     <div class="modal-overlay" id="print-online-invoice-modal">
         <div>
             <div class="receipt-card" id="online-invoice-card">
@@ -645,7 +639,6 @@
     </div>
 
 <script>
-    // Live Clock
     setInterval(() => {
         const now = new Date();
         document.getElementById('live-clock').innerText = now.toLocaleDateString('en-CA') + " | " + now.toLocaleTimeString('ar-EG');
@@ -734,12 +727,10 @@
             renderExpensesTable(); calculateDashboard();
         });
 
-        // الاستماع المباشر لطلبات الأونلاين القادمة من المتجر
         db.collection("onlineOrders").orderBy("timestamp", "desc").onSnapshot(snapshot => {
             onlineOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             const pendingOrders = onlineOrders.filter(o => o.status === 'pending');
             
-            // تنبيه وصوت إشعار فور وصول طلب جديد
             if(pendingOrders.length > previousOrdersCount) {
                 playOrderBeep();
             }
@@ -756,7 +747,6 @@
         }
     }
 
-    // صوت تنبيه ناعم فور وصول طلب أونلاين
     function playOrderBeep() {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -769,7 +759,6 @@
         } catch(e) {}
     }
 
-    // رندر طلبات الأونلاين
     function renderOnlineOrdersTable(pendingOrders) {
         const body = document.querySelector("#online-orders-table tbody");
         const countBadge = document.getElementById("online-orders-count");
@@ -811,12 +800,10 @@
         });
     }
 
-    // قبول طلب الأونلاين وتنزيله من المخزون وطباعة الفاتورة
     async function acceptOnlineOrder(orderId) {
         const order = onlineOrders.find(o => o.id === orderId);
         if(!order) return;
 
-        // التحقق من توفر المخزون لكل مادة
         for (let item of order.items) {
             const prod = inventory.find(i => i.id === item.id);
             if(!prod || prod.qty < item.qty) {
@@ -849,13 +836,10 @@
             batch.update(orderRef, { status: "accepted" });
 
             await batch.commit();
-            
-            // فتح نافذة الطباعة التلقائية مع تفاصيل الفاتورة
             showOnlineInvoiceModal(order);
         }
     }
 
-    // عرض وطباعة فاتورة الأونلاين
     function showOnlineInvoiceModal(order) {
         document.getElementById("inv-cust-name").innerText = order.customerName;
         document.getElementById("inv-cust-phone").innerText = order.phone;
@@ -886,18 +870,13 @@
         document.getElementById("inv-final-total").innerText = (order.totalAmount || 0).toLocaleString() + " د.ع";
 
         document.getElementById("print-online-invoice-modal").style.display = "flex";
-        
-        // فتح حوار الطباعة مباشرة تلقائياً
-        setTimeout(() => {
-            window.print();
-        }, 500);
+        setTimeout(() => { window.print(); }, 500);
     }
 
     function closeOnlineInvoiceModal() {
         document.getElementById("print-online-invoice-modal").style.display = "none";
     }
 
-    // رفض الطلب
     function rejectOnlineOrder(orderId) {
         if(confirm("هل أنت تأكد من رفض هذا الطلب؟")) {
             db.collection("onlineOrders").doc(orderId).update({ status: "rejected" });
