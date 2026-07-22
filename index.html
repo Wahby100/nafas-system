@@ -83,7 +83,7 @@
         .nav-btn {
             display: flex; align-items: center; gap: 14px; padding: 12px 16px;
             background: transparent; color: var(--text-secondary); border: none; border-radius: 14px;
-            font-size: 14px; font-weight: 700; cursor: pointer; text-align: right; width: 100%;
+            font-size: 14px; font-weight: 700; cursor: pointer; text-align: right; width: 100%; position: relative;
         }
         .nav-btn i { width: 22px; text-align: center; font-size: 1.1rem; }
         .nav-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); transform: translateX(-4px); }
@@ -176,6 +176,9 @@
         .badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
         .badge-info { background: rgba(59, 130, 246, 0.15); color: var(--info); border: 1px solid rgba(59, 130, 246, 0.3); }
 
+        /* Notification Badge on Sidebar */
+        .notify-badge { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); background: var(--danger); color: #fff; border-radius: 50%; padding: 2px 7px; font-size: 11px; font-weight: 800; }
+
         /* Forms & Inputs */
         .form-group { margin-bottom: 12px; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -240,7 +243,11 @@
                 </div>
 
                 <div class="nav-menu">
-                    <button class="nav-btn active" onclick="openTab('price-lookup-tab', this)"><i class="fa-solid fa-magnifying-glass"></i> <span>الاستعلام السريع عن الأسعار</span></button>
+                    <button class="nav-btn active" onclick="openTab('price-lookup-tab', this)"><i class="fa-solid fa-magnifying-glass"></i> <span>الاستعلام السريع للأسعار</span></button>
+                    <button class="nav-btn" onclick="openTab('online-orders-tab', this)">
+                        <i class="fa-solid fa-bell"></i> <span>طلبات الأونلاين</span>
+                        <span class="notify-badge" id="pending-orders-badge" style="display: none;">0</span>
+                    </button>
                     <button class="nav-btn" onclick="openTab('pos-tab', this)"><i class="fa-solid fa-cart-shopping"></i> <span>واجهة الكاشير (POS)</span></button>
                     <button class="nav-btn" onclick="openTab('inventory-tab', this)"><i class="fa-solid fa-boxes-stacked"></i> <span>إدارة المخزون</span></button>
                     <button class="nav-btn" onclick="openTab('sales-tab', this)"><i class="fa-solid fa-receipt"></i> <span>سجل المبيعات</span></button>
@@ -302,6 +309,29 @@
                     </div>
 
                     <div class="price-lookup-grid" id="price-cards-container"></div>
+                </div>
+            </div>
+
+            <!-- 🛍️ تبويب طلبات الأونلاين المباشرة من المتجر -->
+            <div id="online-orders-tab" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header-flex">
+                        <h2><i class="fa-solid fa-bell"></i> طلبات المبيعات أونلاين القادمة من المتجر</h2>
+                        <span class="badge badge-gold" id="online-orders-count">0 طلبات قيد الانتظار</span>
+                    </div>
+                    <table id="online-orders-table">
+                        <thead>
+                            <tr>
+                                <th>اسم الزبون</th>
+                                <th>الهاتف والعنوان</th>
+                                <th>المواد المطلوبة</th>
+                                <th>المبلغ الكلي</th>
+                                <th>التاريخ والوقت</th>
+                                <th>إجراءات الكاشير</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
 
@@ -399,7 +429,6 @@
                         <button class="btn-success btn-table" onclick="exportSalesTableToExcel()"><i class="fa-solid fa-file-excel"></i> اسحب التقرير المفلتر كـ Excel</button>
                     </div>
 
-                    <!-- شريط التحكم بتحديد فترة التاريخ -->
                     <div class="report-filter-bar">
                         <div style="flex: 1; min-width: 150px;">
                             <label><i class="fa-solid fa-calendar-day"></i> من تاريخ:</label>
@@ -417,7 +446,6 @@
                         </div>
                     </div>
 
-                    <!-- كروت تلخيص التقرير حسب الفترة المحددة -->
                     <div class="dash-grid" style="margin-bottom: 20px;">
                         <div class="dash-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
                             <h3>مبيعات الفترة المحددة</h3>
@@ -580,8 +608,10 @@
 
     let currentUserRole = "user";
     let groups = []; let itemDirectory = []; let inventory = []; let sales = []; let systemUsers = []; let expenses = [];
+    let onlineOrders = [];
     let cart = []; let batchItemsList = [];
     let filteredSalesData = [];
+    let previousOrdersCount = 0;
 
     auth.onAuthStateChanged(user => {
         if (user) {
@@ -645,11 +675,129 @@
             renderExpensesTable(); calculateDashboard();
         });
 
+        // الاستماع المباشر لطلبات الأونلاين القادمة من المتجر
+        db.collection("onlineOrders").orderBy("timestamp", "desc").onSnapshot(snapshot => {
+            onlineOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const pendingOrders = onlineOrders.filter(o => o.status === 'pending');
+            
+            // تنبيه وصوت إشعار فور وصول طلب جديد
+            if(pendingOrders.length > previousOrdersCount) {
+                playOrderBeep();
+            }
+            previousOrdersCount = pendingOrders.length;
+
+            renderOnlineOrdersTable(pendingOrders);
+        });
+
         if (currentUserRole === 'admin') {
             db.collection("users").onSnapshot(snapshot => {
                 systemUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderUsersTable();
             });
+        }
+    }
+
+    // صوت تنبيه ناعم فور وصول طلب أونلاين
+    function playOrderBeep() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+            osc.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.3);
+        } catch(e) {}
+    }
+
+    // رندر طلبات الأونلاين
+    function renderOnlineOrdersTable(pendingOrders) {
+        const body = document.querySelector("#online-orders-table tbody");
+        const countBadge = document.getElementById("online-orders-count");
+        const sidebarBadge = document.getElementById("pending-orders-badge");
+
+        if(countBadge) countBadge.innerText = `${pendingOrders.length} طلبات قيد الانتظار`;
+        if(sidebarBadge) {
+            if(pendingOrders.length > 0) {
+                sidebarBadge.innerText = pendingOrders.length;
+                sidebarBadge.style.display = "inline-block";
+            } else {
+                sidebarBadge.style.display = "none";
+            }
+        }
+
+        if(!body) return;
+        body.innerHTML = '';
+
+        if(pendingOrders.length === 0) {
+            body.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">لا توجد طلبات أونلاين جديدة حالياً.</td></tr>';
+            return;
+        }
+
+        pendingOrders.forEach(o => {
+            let itemsSummary = o.items.map(i => `${i.name} (×${i.qty})`).join(" ، ");
+            body.innerHTML += `
+                <tr>
+                    <td><strong>${o.customerName}</strong></td>
+                    <td><small>📞 ${o.phone}<br>📍 ${o.address}</small></td>
+                    <td><small>${itemsSummary}</small></td>
+                    <td style="color:var(--success); font-weight:800;">${o.totalAmount.toLocaleString()} د.ع</td>
+                    <td><small>${o.date}</small></td>
+                    <td style="display:flex; gap:6px;">
+                        <button class="btn-success btn-table" onclick="acceptOnlineOrder('${o.id}')"><i class="fa-solid fa-check"></i> قبول وخصم</button>
+                        <button class="btn-danger btn-table" onclick="rejectOnlineOrder('${o.id}')"><i class="fa-solid fa-xmark"></i> رفض</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    // قبول طلب الأونلاين وتنزيله من المخزون
+    async function acceptOnlineOrder(orderId) {
+        const order = onlineOrders.find(o => o.id === orderId);
+        if(!order) return;
+
+        // التحقق من توفر المخزون لكل مادة
+        for (let item of order.items) {
+            const prod = inventory.find(i => i.id === item.id);
+            if(!prod || prod.qty < item.qty) {
+                alert(`خطأ: المادة (${item.name}) لا تملك رصيداً كافياً بالمخزن للقبول!`);
+                return;
+            }
+        }
+
+        if(confirm("قبول الطلب وتنزيل المواد من المخزن وإصدار الفاتورة؟")) {
+            const batch = db.batch();
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-CA') + " " + now.toLocaleTimeString('ar-EG');
+
+            order.items.forEach(item => {
+                const prodRef = db.collection("inventory").doc(item.id);
+                const prod = inventory.find(i => i.id === item.id);
+                
+                batch.update(prodRef, { qty: Math.max(0, prod.qty - item.qty) });
+
+                const saleRef = db.collection("sales").doc();
+                batch.set(saleRef, {
+                    name: item.name, group: item.group || 'أونلاين', type: 'مفرد',
+                    qty: item.qty, unitPrice: item.price, total: item.qty * item.price, costTotal: item.qty * (item.costPrice || 0),
+                    paymentStatus: 'cash', customerName: `${order.customerName} (أونلاين)`,
+                    date: dateStr, rawDate: now.toLocaleDateString('en-CA'), timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            });
+
+            const orderRef = db.collection("onlineOrders").doc(orderId);
+            batch.update(orderRef, { status: "accepted" });
+
+            await batch.commit();
+            alert("✅ تم قبول الطلب بنجاح وخصم الكميات من المخزون!");
+        }
+    }
+
+    // رفض الطلب
+    function rejectOnlineOrder(orderId) {
+        if(confirm("هل أنت تأكد من رفض هذا الطلب؟")) {
+            db.collection("onlineOrders").doc(orderId).update({ status: "rejected" });
         }
     }
 
@@ -906,7 +1054,6 @@
         document.querySelectorAll("#inventory-table tbody tr").forEach(row => { row.style.display = row.textContent.toLowerCase().includes(query) ? "" : "none"; });
     }
 
-    // --- 📊 منطق تقارير المبيعات حسب الفترة والتاريخ ---
     function setQuickDateRange(range) {
         const fromInput = document.getElementById("sales-date-from");
         const toInput = document.getElementById("sales-date-to");
