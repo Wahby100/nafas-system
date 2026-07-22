@@ -6,7 +6,7 @@
     <title>Nafas Enterprise System | نظام إدارة النفَس</title>
     <!-- مكتبة أكسل -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <!-- خط Tajawal العالي الوضوح -->
+    <!-- خط Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     
     <!-- FontAwesome 6 Icons CDN -->
@@ -183,7 +183,15 @@
 
         /* Receipt Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 1000; display: none; justify-content: center; align-items: center; }
-        .receipt-card { background: #fff; color: #1e293b; width: 330px; padding: 25px; border-radius: 16px; font-family: 'Courier New', Courier, monospace; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+        .receipt-card { background: #fff; color: #1e293b; width: 330px; padding: 25px; border-radius: 16px; font-family: 'Tajawal', sans-serif; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+
+        @media print {
+            body * { visibility: hidden; }
+            #receipt-modal, #receipt-modal * { visibility: visible; }
+            #receipt-modal { position: absolute; left: 0; top: 0; width: 100%; background: none; }
+            .no-print { display: none !important; }
+            .receipt-card { width: 100%; border-radius: 0; box-shadow: none; padding: 10px; }
+        }
     </style>
 </head>
 <body>
@@ -445,25 +453,41 @@
         </div>
     </div>
 
-    <!-- Receipt Modal -->
+    <!-- Receipt Modal (تنسيق الفاتورة الجديد والمطلوب) -->
     <div class="modal-overlay" id="receipt-modal">
         <div>
             <div class="receipt-card" id="receipt-modal-card">
-                <div style="text-align:center; border-bottom:2px dashed #000; padding-bottom:10px;">
-                    <h2 style="margin:0; color:#000; justify-content: center;">محل Nafas</h2>
-                    <p style="margin:2px 0; font-size:12px;">فاتورة مبيعات سريعة</p>
-                    <small id="receipt-date"></small>
+                <div style="text-align:center; border-bottom:2px dashed #000; padding-bottom:12px; margin-bottom:12px;">
+                    <!-- اسم المحل بالإنجليزي فوق -->
+                    <h1 style="margin:0; color:#000; font-size:26px; font-weight:800; letter-spacing:1px; text-transform:uppercase;">Nafas</h1>
+                    <p style="margin:5px 0 2px 0; font-size:11px; font-weight:700; color:#333;">بغداد - الدورة - شارع المعلمين - تحت السقيفة</p>
+                    <p style="margin:0; font-size:11px; font-weight:700; color:#333;">هاتف: 07716097656 - 07706284809</p>
+                    <small id="receipt-date" style="display:block; margin-top:6px; font-size:10px; color:#555;"></small>
                 </div>
-                <table style="width:100%; margin:10px 0; font-size:12px;">
-                    <thead><tr><th>المادة</th><th>النوع</th><th>العدد</th><th>السعر</th></tr></thead>
+
+                <table style="width:100%; margin:10px 0; font-size:12px; border-collapse:collapse;">
+                    <thead>
+                        <tr style="border-bottom:1px solid #000;">
+                            <th style="text-align:right; padding:4px 0; color:#000;">المادة</th>
+                            <th style="text-align:center; padding:4px 0; color:#000;">النوع</th>
+                            <th style="text-align:center; padding:4px 0; color:#000;">العدد</th>
+                            <th style="text-align:left; padding:4px 0; color:#000;">المبلغ</th>
+                        </tr>
+                    </thead>
                     <tbody id="receipt-items-body"></tbody>
                 </table>
-                <div style="border-top:2px dashed #000; padding-top:10px; text-align:center;">
-                    <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:15px;">
-                        <span>المجموع:</span>
+
+                <div style="border-top:2px dashed #000; padding-top:10px; text-align:center; margin-top:10px;">
+                    <div style="display:flex; justify-content:space-between; font-weight:800; font-size:15px;">
+                        <span>الإجمالي:</span>
                         <span id="receipt-total">0 د.ع</span>
                     </div>
-                    <p id="receipt-customer-info" style="margin:5px 0 0 0; font-size:11px;"></p>
+                    <p id="receipt-customer-info" style="margin:6px 0 0 0; font-size:11px; font-weight:700;"></p>
+                    
+                    <!-- العبارة اللطيفة في أسفل الورقة -->
+                    <div style="margin-top:15px; border-top:1px solid #ccc; padding-top:8px; font-size:11px; font-weight:700; color:#222;">
+                        شكراً لزيارتكم محل النفَس، نسعد بخدمتكم دائماً ونتمنى لكم يوماً جميلاً! ✨
+                    </div>
                 </div>
             </div>
             <div style="margin-top: 15px; display: flex; gap: 10px;" class="no-print">
@@ -567,7 +591,6 @@
         }
     }
 
-    // ⭐️ رندر كروت الاستعلام السريع عن الأسعار
     function renderPriceLookupCards() {
         const container = document.getElementById("price-cards-container"); if(!container) return; container.innerHTML = '';
         document.getElementById("total-products-count").innerText = `إجمالي المواد: ${inventory.length}`;
@@ -603,7 +626,6 @@
         });
     }
 
-    // فلترة كروت الأسعار بالبحث الفوري
     function filterPriceCards() {
         const query = document.getElementById("quick-price-search").value.toLowerCase();
         document.querySelectorAll(".price-item-card").forEach(card => {
@@ -790,7 +812,7 @@
     function showReceiptModal(dateStr, items, total, paymentStatus, customerName) {
         document.getElementById("receipt-date").innerText = dateStr;
         const body = document.getElementById("receipt-items-body"); body.innerHTML = '';
-        items.forEach(i => { body.innerHTML += `<tr><td>${i.name}</td><td><small>(${i.type})</small></td><td>${i.qty}</td><td>${(i.price*i.qty).toLocaleString()}</td></tr>`; });
+        items.forEach(i => { body.innerHTML += `<tr><td style="padding:4px 0;">${i.name}</td><td style="text-align:center;">${i.type}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:left;">${(i.price*i.qty).toLocaleString()}</td></tr>`; });
         document.getElementById("receipt-total").innerText = total.toLocaleString() + " د.ع";
         document.getElementById("receipt-customer-info").innerText = paymentStatus === 'debt' ? `الدفع: دين (${customerName})` : "الدفع: نقداً (Cash)";
         document.getElementById("receipt-modal").style.display = "flex";
