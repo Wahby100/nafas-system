@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر النفَس الإلكتروني | Nafas Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: rgba(19, 26, 42, 0.75);
+            --accent-gold: #f39c12;
+            --gradient-accent: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --success: #10b981;
+        }
+
+        * { box-sizing: border-box; font-family: 'Tajawal', sans-serif; transition: all 0.25s ease; }
+        body { background-color: var(--bg-dark); color: var(--text-primary); margin: 0; padding: 15px; }
+        
+        .header { text-align: center; padding: 20px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        .header h1 { color: var(--accent-gold); margin: 0; font-size: 26px; font-weight: 800; }
+        .header-info { color: var(--text-secondary); font-size: 12px; margin-top: 6px; font-weight: 700; line-height: 1.6; }
+
+        /* Search & Filter Bar */
+        .filter-section {
+            display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+        }
+        .filter-section input, .filter-section select {
+            padding: 12px 15px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px; color: #fff; font-size: 14px; outline: none;
+        }
+        .filter-section input:focus, .filter-section select:focus { border-color: var(--accent-gold); }
+
+        .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-bottom: 90px; }
+        .product-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-card:hover { border-color: var(--accent-gold); transform: translateY(-3px); }
+        .product-card h3 { font-size: 15px; margin: 8px 0; }
+        .product-card .price { color: var(--success); font-weight: 800; font-size: 16px; margin-bottom: 10px; }
+
+        button { background: var(--gradient-accent); border: none; color: #fff; padding: 10px 15px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+
+        /* Floating Cart Bar */
+        .cart-float-bar { 
+            position: fixed; bottom: 15px; left: 15px; right: 15px; 
+            background: rgba(18, 24, 38, 0.95); backdrop-filter: blur(15px); 
+            border: 1px solid var(--accent-gold); border-radius: 16px; padding: 12px 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 100; 
+        }
+
+        /* Modal Checkout */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 200; padding: 15px; }
+        .modal-card { background: #131a2a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; width: 100%; max-width: 450px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>محل النفَس | Nafas Shop</h1>
+        <div class="header-info">
+            <div>📍 بغداد - الدورة - شارع المعلمين - تحت السقيفة</div>
+            <div>📞 هاتف: 07716097656 - 07706284809</div>
+        </div>
+    </div>
+
+    <!-- شريط البحث والفلترة -->
+    <div class="filter-section">
+        <input type="text" id="search-input" placeholder="🔍 ابحث عن اسم المنتج..." onkeyup="filterProducts()" style="flex: 2; min-width: 180px;">
+        <select id="group-select" onchange="filterProducts()" style="flex: 1; min-width: 140px;">
+            <option value="">جميع المجموعات</option>
+        </select>
+    </div>
+
+    <!-- قائمة المنتجات -->
+    <div class="shop-grid" id="products-container">
+        <p style="text-align: center; grid-column: span 2; color: var(--text-secondary);">جاري تحميل المنتجات المتوفرة...</p>
+    </div>
+
+    <!-- شريط السلة العائم -->
+    <div class="cart-float-bar" id="cart-float-bar" style="display: none;">
+        <div>
+            <span style="font-size: 12px; color: var(--text-secondary);">السلة:</span>
+            <strong id="cart-count" style="color: var(--accent-gold); margin-right: 4px;">0 مواد</strong>
+            <div id="cart-total" style="font-weight: 800; color: #fff; font-size: 13px;">0 د.ع</div>
+        </div>
+        <button style="width: auto; padding: 10px 20px;" onclick="openCheckoutModal()"><i class="fa-solid fa-cart-arrow-down"></i> إتمام الطلب</button>
+    </div>
+
+    <!-- نافذة كتابة بيانات الزبون -->
+    <div class="modal" id="checkout-modal">
+        <div class="modal-card">
+            <h2 style="color: var(--accent-gold); margin-top: 0; font-size: 18px;"><i class="fa-solid fa-truck-fast"></i> تأكيد طلب الشراء</h2>
+            
+            <!-- ملخص الفاتورة -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 12px; margin-bottom: 15px; font-size: 13px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">مجموع المواد:</span>
+                    <strong id="summary-items-total">0 د.ع</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">أجور التوصيل:</span>
+                    <strong style="color: var(--accent-gold);">5,000 د.ع</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 6px; font-weight: 800; font-size: 15px;">
+                    <span>المجموع النهائي:</span>
+                    <span id="summary-final-total" style="color: var(--success);">0 د.ع</span>
+                </div>
+            </div>
+
+            <form id="order-form">
+                <div class="form-group"><label>الاسم الكامل:</label><input type="text" id="cust-name" required placeholder="أدخل اسمك الكريم"></div>
+                <div class="form-group"><label>رقم الهاتف:</label><input type="tel" id="cust-phone" required placeholder="077XXXXXXXX"></div>
+                <div class="form-group"><label>العنوان بالتفصيل:</label><input type="text" id="cust-address" required placeholder="المنطقة، أقرب نقطة دالة..."></div>
+                <div class="form-group"><label>ملاحظات إضافية (اختياري):</label><textarea id="cust-notes" rows="2" placeholder="أي تعليمات خاصة بالتوصيل..."></textarea></div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="submit" style="flex: 2;"><i class="fa-solid fa-paper-plane"></i> إرسال الطلب الآن</button>
+                    <button type="button" onclick="closeCheckoutModal()" style="flex: 1; background: rgba(255,255,255,0.1);">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBS81_1q4M00brOhTxSTZEkX9aXnwpjo7Q",
+        authDomain: "nafas-system-6d5a7.firebaseapp.com",
+        projectId: "nafas-system-6d5a7",
+        storageBucket: "nafas-system-6d5a7.firebasestorage.app",
+        messagingSenderId: "475118364089",
+        appId: "1:475118364089:web:4c2681058865c5bc094268",
+        measurementId: "G-6Z3CZ185ZY"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const DELIVERY_FEE = 5000; // كلفة التوصيل الثابتة
+    let inventory = [];
+    let groups = [];
+    let cart = [];
+
+    // جلب المجموعات المتاحة
+    db.collection("shopGroups").onSnapshot(snapshot => {
+        groups = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const select = document.getElementById("group-select");
+        select.innerHTML = '<option value="">جميع المجموعات</option>';
+        groups.forEach(g => {
+            select.innerHTML += `<option value="${g.name}">${g.name}</option>`;
+        });
+    });
+
+    // جلب المنتجات المتوفرة فقط بالمخزن
+    db.collection("inventory").onSnapshot(snapshot => {
+        inventory = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(i => i.qty > 0);
+        filterProducts();
+    });
+
+    function filterProducts() {
+        const query = document.getElementById("search-input").value.toLowerCase().trim();
+        const selectedGroup = document.getElementById("group-select").value;
+
+        const filtered = inventory.filter(item => {
+            const matchesName = item.name.toLowerCase().includes(query);
+            const matchesGroup = !selectedGroup || item.group === selectedGroup;
+            return matchesName && matchesGroup;
+        });
+
+        renderProducts(filtered);
+    }
+
+    function renderProducts(itemsList) {
+        const box = document.getElementById("products-container");
+        box.innerHTML = '';
+        if(itemsList.length === 0) {
+            box.innerHTML = '<p style="text-align: center; grid-column: span 2; color: var(--text-secondary);">لا توجد منتجات مطابقة للبحث.</p>';
+            return;
+        }
+
+        itemsList.forEach(p => {
+            box.innerHTML += `
+                <div class="product-card">
+                    <div>
+                        <small style="color:var(--accent-gold); font-size:10px;">${p.group}</small>
+                        <h3>${p.name}</h3>
+                    </div>
+                    <div>
+                        <div class="price">${(p.singleSell || 0).toLocaleString()} د.ع</div>
+                        <button onclick="addToCart('${p.id}')"><i class="fa-solid fa-plus"></i> إضافة للسلة</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function addToCart(id) {
+        const prod = inventory.find(i => i.id === id);
+        if(!prod) return;
+        const item = cart.find(c => c.id === id);
+        if(item) {
+            if(item.qty + 1 > prod.qty) { alert("تم الوصول للكمية القصوى المتوفرة بالمخزن!"); return; }
+            item.qty++;
+        } else {
+            cart.push({ id: prod.id, name: prod.name, price: prod.singleSell, costPrice: prod.singleCost, group: prod.group, qty: 1 });
+        }
+        updateCartBar();
+    }
+
+    function updateCartBar() {
+        const bar = document.getElementById("cart-float-bar");
+        if(cart.length === 0) { bar.style.display = "none"; return; }
+        bar.style.display = "flex";
+        
+        let count = 0, itemsTotal = 0;
+        cart.forEach(c => { count += c.qty; itemsTotal += (c.qty * c.price); });
+        
+        const finalTotal = itemsTotal + DELIVERY_FEE;
+
+        document.getElementById("cart-count").innerText = `${count} مواد`;
+        document.getElementById("cart-total").innerText = `المجموع: ${finalTotal.toLocaleString()} د.ع (شامل التوصيل)`;
+        
+        document.getElementById("summary-items-total").innerText = `${itemsTotal.toLocaleString()} د.ع`;
+        document.getElementById("summary-final-total").innerText = `${finalTotal.toLocaleString()} د.ع`;
+    }
+
+    function openCheckoutModal() { document.getElementById("checkout-modal").style.display = "flex"; }
+    function closeCheckoutModal() { document.getElementById("checkout-modal").style.display = "none"; }
+
+    document.getElementById("order-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        if(cart.length === 0) return;
+
+        const customerName = document.getElementById("cust-name").value.trim();
+        const phone = document.getElementById("cust-phone").value.trim();
+        const address = document.getElementById("cust-address").value.trim();
+        const notes = document.getElementById("cust-notes").value.trim();
+
+        let itemsTotal = 0;
+        cart.forEach(c => itemsTotal += (c.qty * c.price));
+        const finalTotal = itemsTotal + DELIVERY_FEE;
+
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-CA') + " " + now.toLocaleTimeString('ar-EG');
+
+        db.collection("onlineOrders").add({
+            customerName, phone, address, notes,
+            items: cart,
+            itemsTotal,
+            deliveryFee: DELIVERY_FEE,
+            totalAmount: finalTotal,
+            status: "pending",
+            date: dateStr,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            alert("✅ تم إرسال طلبك بنجاح! سيتواصل معك الكاشير لتأكيد التوصيل.");
+            cart = [];
+            updateCartBar();
+            closeCheckoutModal();
+            this.reset();
+        }).catch(err => {
+            alert("حدث خطأ أثناء إرسال الطلب: " + err.message);
+        });
+    });
+</script>
+</body>
+</html>
