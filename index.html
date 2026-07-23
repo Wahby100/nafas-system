@@ -409,15 +409,32 @@
                         <form id="quick-entry-form" style="margin-top:12px;">
                             <div class="form-group"><label>المجموعة:</label><select id="stock-group-filter" onchange="filterStockItems()" required></select></div>
                             <div class="form-group"><label>المادة:</label><select id="stock-item-select" required disabled></select></div>
-                            <div class="form-group"><label>نوع الإدخال:</label><select id="stock-type" onchange="toggleStockWholesaleFields()" required><option value="single">مفرد</option><option value="wholesale">جملة</option></select></div>
+                            
+                            <div class="form-row">
+                                <div>
+                                    <label>وحدة البيع:</label>
+                                    <select id="stock-unit-type" onchange="toggleUnitFields()" required>
+                                        <option value="piece">بالقطعة (Piece)</option>
+                                        <option value="kg">بالكيلوغرام / الغرامات (Kg / Grams)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>نوع الإدخال:</label>
+                                    <select id="stock-type" onchange="toggleStockWholesaleFields()" required>
+                                        <option value="single">مفرد</option>
+                                        <option value="wholesale">جملة</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div id="wholesale-pack-fields" style="display: none;" class="form-row">
-                                <div><label>قطع الكارتون:</label><input type="number" id="stock-pieces-per-pack" min="1" value="1"></div>
+                                <div><label>قطع/كيلوات الكارتون:</label><input type="number" id="stock-pieces-per-pack" step="any" min="0.1" value="1"></div>
                                 <div><label>عدد الكارتونات:</label><input type="number" id="stock-packs-qty" min="1" value="1"></div>
                             </div>
-                            <div class="form-group" id="single-qty-field"><label>الكمية بالقطعة:</label><input type="number" id="stock-qty" min="1" placeholder="0"></div>
+                            <div class="form-group" id="single-qty-field"><label id="single-qty-label">الكمية بالقطعة:</label><input type="number" id="stock-qty" step="any" min="0.01" placeholder="0"></div>
                             <div class="form-row">
-                                <div><label>سعر الشراء:</label><input type="number" id="stock-cost-price" min="0" required placeholder="0"></div>
-                                <div><label>سعر البيع:</label><input type="number" id="stock-sell-price" min="0" required placeholder="0"></div>
+                                <div><label id="cost-price-label">سعر الشراء الكلي:</label><input type="number" id="stock-cost-price" min="0" required placeholder="0"></div>
+                                <div><label id="sell-price-label">سعر بيع (القطعة/الكيلو):</label><input type="number" id="stock-sell-price" min="0" required placeholder="0"></div>
                             </div>
                             <div class="form-group">
                                 <label><input type="checkbox" id="stock-show-in-shop" checked style="width:auto; margin-left:6px;"> عرض المادة في متجر الأونلاين تلقائياً</label>
@@ -428,7 +445,7 @@
                         <div style="margin-top:15px;" id="batch-preview-box">
                             <h4 style="margin:5px 0; color:var(--accent-gold);">المواد المجهزة للحفظ:</h4>
                             <table>
-                                <thead><tr><th>المادة</th><th>الكمية</th><th>حذف</th></tr></thead>
+                                <thead><tr><th>المادة</th><th>الكمية / الوزن</th><th>حذف</th></tr></thead>
                                 <tbody id="batch-table-body"></tbody>
                             </table>
                             <button class="btn-success" style="width:100%; margin-top:10px;" onclick="saveAllBatchItems()"><i class="fa-solid fa-floppy-disk"></i> حفظ وإصدار فاتورة الشراء</button>
@@ -442,7 +459,7 @@
                         </div>
                         <input type="text" id="inventory-search" placeholder="ابحث بالاسم أو المجموعة..." onkeyup="filterInventoryTable()" style="margin-bottom:12px;">
                         <table id="inventory-table">
-                            <thead><tr><th>المجموعة</th><th>المنتج</th><th>المخزون</th><th>شراء المفرد</th><th>بيع المفرد</th><th>بيع الجملة</th><th>العرض بالمتجر 🌐</th><th class="admin-only">إجراء</th></tr></thead>
+                            <thead><tr><th>المجموعة</th><th>المنتج</th><th>وحدة البيع</th><th>المخزون المتوفر</th><th>الشراء (التكلفة)</th><th>بيع المفرد/الكيلو</th><th>بيع الجملة</th><th>العرض بالمتجر 🌐</th><th class="admin-only">إجراء</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -491,7 +508,7 @@
 
                     <input type="text" id="sales-search" placeholder="ابحث بالاسم أو المجموعة داخل نتائج الفترة..." onkeyup="filterSalesTableSearch()" style="margin-bottom:12px;">
                     <table id="sales-table">
-                        <thead><tr><th>المجموعة</th><th>المنتج</th><th>النوع</th><th>الكمية</th><th>السعر الفردي</th><th>الإجمالي</th><th>الدفع</th><th>التاريخ والوقت</th><th>طباعة الفاتورة</th><th class="admin-only">إجراء</th></tr></thead>
+                        <thead><tr><th>المجموعة</th><th>المنتج</th><th>النوع / الوزن</th><th>الكمية المباعة</th><th>السعر الفردي</th><th>الإجمالي</th><th>الدفع</th><th>التاريخ والوقت</th><th>طباعة الفاتورة</th><th class="admin-only">إجراء</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -608,7 +625,7 @@
                     <thead>
                         <tr style="border-bottom:1px solid #000;">
                             <th style="text-align:right; padding:4px 0; color:#000;">المادة</th>
-                            <th style="text-align:center; padding:4px 0; color:#000;">النوع</th>
+                            <th style="text-align:center; padding:4px 0; color:#000;">النوع/الوزن</th>
                             <th style="text-align:center; padding:4px 0; color:#000;">العدد</th>
                             <th style="text-align:left; padding:4px 0; color:#000;">المبلغ</th>
                         </tr>
@@ -990,8 +1007,8 @@
 
         for (let item of order.items) {
             const prod = inventory.find(i => i.id === item.id || i.name === item.name);
-            if(!prod || prod.qty < item.qty) {
-                alert(`خطأ: المادة (${item.name}) لا تملك رصيداً كافياً بالمخزن للقبول! المتاح: (${prod ? prod.qty : 0}) قطعة`);
+            if(!prod || prod.qty < (item.amount ? item.amount * item.qty : item.qty)) {
+                alert(`خطأ: المادة (${item.name}) لا تملك رصيداً كافياً بالمخزن للقبول! المتاح: (${prod ? prod.qty : 0})`);
                 return;
             }
         }
@@ -1004,8 +1021,9 @@
             order.items.forEach(item => {
                 const prod = inventory.find(i => i.id === item.id || i.name === item.name);
                 if(prod) {
+                    let qtyDeduct = item.amount ? (item.amount * item.qty) : item.qty;
                     const prodRef = db.collection("inventory").doc(prod.id);
-                    batch.update(prodRef, { qty: firebase.firestore.FieldValue.increment(-item.qty) });
+                    batch.update(prodRef, { qty: firebase.firestore.FieldValue.increment(-qtyDeduct) });
 
                     const costPrice = prod.singleCost || 0;
 
@@ -1013,11 +1031,11 @@
                     batch.set(saleRef, {
                         name: item.name,
                         group: item.group || prod.group || 'أونلاين',
-                        type: 'مفرد',
+                        type: prod.unitType === 'kg' ? 'وزن' : 'مفرد',
                         qty: item.qty,
                         unitPrice: item.price,
                         total: item.qty * item.price,
-                        costTotal: item.qty * costPrice,
+                        costTotal: qtyDeduct * costPrice,
                         paymentStatus: 'cash',
                         customerName: `${order.customerName} (أونلاين)`,
                         date: dateStr,
@@ -1105,7 +1123,7 @@
         if(lowItems.length > 0) {
             container.style.display = "flex";
             document.getElementById("low-stock-count-badge").innerText = `${lowItems.length} مواد قابلة للنفاد`;
-            document.getElementById("low-stock-items-text").innerText = lowItems.map(i => `${escapeHTML(i.name)} (${i.qty})`).join(" ، ");
+            document.getElementById("low-stock-items-text").innerText = lowItems.map(i => `${escapeHTML(i.name)} (${i.qty} ${i.unitType==='kg'?'كجم':'قطع'})`).join(" ، ");
         } else {
             container.style.display = "none";
         }
@@ -1116,29 +1134,31 @@
         document.getElementById("total-products-count").innerText = `إجمالي المواد: ${inventory.length}`;
 
         inventory.forEach(item => {
+            const isKg = item.unitType === 'kg';
+            const unitLabel = isKg ? 'كغم / غرام' : 'قطعة';
             const isLow = item.qty <= 5;
             const isOut = item.qty <= 0;
             const badgeClass = isOut ? 'badge-danger' : (isLow ? 'badge-warning' : 'badge-success');
-            const statusText = isOut ? '<i class="fa-solid fa-xmark"></i> نفذت' : (isLow ? `<i class="fa-solid fa-triangle-exclamation"></i> قارب على النفاد (${item.qty})` : `${item.qty} قطعة`);
+            const statusText = isOut ? '<i class="fa-solid fa-xmark"></i> نفذت' : (isLow ? `<i class="fa-solid fa-triangle-exclamation"></i> قارب على النفاد (${item.qty} ${isKg?'كجم':'قطع'})` : `${item.qty} ${isKg?'كجم':'قطع'}`);
 
             container.innerHTML += `
                 <div class="price-item-card">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="margin:0; font-size:15px; color:#fff;">${escapeHTML(item.name)}</h3>
+                        <h3 style="margin:0; font-size:15px; color:#fff;">${escapeHTML(item.name)} ${isKg?'⚖️':''}</h3>
                         <span class="badge badge-gold">${escapeHTML(item.group)}</span>
                     </div>
                     <div>
+                        <div class="price-row-detail">
+                            <span style="color:var(--text-secondary);">وحدة البيع:</span>
+                            <strong style="color:var(--cyber-cyan);">${unitLabel}</strong>
+                        </div>
                         <div class="price-row-detail">
                             <span style="color:var(--text-secondary);">سعر الشراء (التكلفة):</span>
                             <strong style="color:var(--danger);">${(item.singleCost || 0).toLocaleString()} د.ع</strong>
                         </div>
                         <div class="price-row-detail">
-                            <span style="color:var(--text-secondary);">سعر بيع المفرد:</span>
+                            <span style="color:var(--text-secondary);">${isKg?'سعر بيع الكيلو:':'سعر بيع المفرد:'}</span>
                             <strong style="color:var(--success); font-size:15px;">${(item.singleSell || 0).toLocaleString()} د.ع</strong>
-                        </div>
-                        <div class="price-row-detail">
-                            <span style="color:var(--text-secondary);">سعر بيع الجملة:</span>
-                            <strong style="color:var(--purple);">${(item.wholesaleSell || 0).toLocaleString()} د.ع</strong>
                         </div>
                         <div class="price-row-detail">
                             <span style="color:var(--text-secondary);">المتبقي بالمخزن:</span>
@@ -1163,18 +1183,19 @@
 
         inventory.forEach(item => {
             if(filterGroup && item.group !== filterGroup) return;
+            const isKg = item.unitType === 'kg';
             const isLow = item.qty <= 5;
             pBox.innerHTML += `
                 <div class="pos-card" id="pos-card-${item.id}" onclick="triggerFlyToCart(event, '${item.id}'); addToCart('${item.id}')">
                     <div>
-                        <span class="badge badge-gold">${escapeHTML(item.group)}</span>
+                        <span class="badge badge-gold">${escapeHTML(item.group)} ${isKg?'⚖️':''}</span>
                         <h4>${escapeHTML(item.name)}</h4>
                     </div>
                     <div>
-                        <div class="price">مفرد: ${(item.singleSell||0).toLocaleString()} د.ع</div>
-                        <div style="font-size:11px; color:var(--purple); font-weight:700;">جملة: ${(item.wholesaleSell||0).toLocaleString()} د.ع</div>
+                        <div class="price">${isKg ? 'الكيلو:' : 'مفرد:'} ${(item.singleSell||0).toLocaleString()} د.ع</div>
+                        <div style="font-size:11px; color:var(--purple); font-weight:700;">${isKg ? '⚖️ بيع بالأوزان' : `جملة: ${(item.wholesaleSell||0).toLocaleString()} د.ع`}</div>
                         <div style="font-size:11px; margin-top:4px;">
-                            ${item.qty <= 0 ? '<span class="badge badge-danger">نفذت</span>' : `<span class="${isLow ? 'badge badge-warning' : 'badge badge-info'}">${item.qty} قطعة</span>`}
+                            ${item.qty <= 0 ? '<span class="badge badge-danger">نفذت</span>' : `<span class="${isLow ? 'badge badge-warning' : 'badge badge-info'}">${item.qty} ${isKg?'كجم':'قطع'}</span>`}
                         </div>
                     </div>
                 </div>
@@ -1209,10 +1230,19 @@
         setTimeout(() => { particle.remove(); }, 750);
     }
 
+    function toggleUnitFields() {
+        const uType = document.getElementById('stock-unit-type').value;
+        const isKg = uType === 'kg';
+        document.getElementById('single-qty-label').innerText = isKg ? 'الوزن بالكيلوغرامات (مثلاً 10.5):' : 'الكمية بالقطعة:';
+        document.getElementById('sell-price-label').innerText = isKg ? 'سعر بيع الكيلو الواحد:' : 'سعر بيع المفرد:';
+        document.getElementById('cost-price-label').innerText = isKg ? 'سعر شراء الكيلو (التكلفة):' : 'سعر الشراء (التكلفة):';
+    }
+
     function addQuickBatchRow() {
         playBeepSound();
         const group = document.getElementById('stock-group-filter').value;
         const name = document.getElementById('stock-item-select').value;
+        const unitType = document.getElementById('stock-unit-type').value;
         const type = document.getElementById('stock-type').value;
         const costPrice = parseFloat(document.getElementById('stock-cost-price').value);
         const sellPrice = parseFloat(document.getElementById('stock-sell-price').value);
@@ -1220,11 +1250,11 @@
 
         if(!group || !name || isNaN(costPrice) || isNaN(sellPrice)) { alert("يرجى ملء جميع البيانات!"); return; }
 
-        let piecesPerPack = parseInt(document.getElementById('stock-pieces-per-pack').value) || 1;
-        let calculatedQty = (type === 'single') ? parseInt(document.getElementById('stock-qty').value) : (piecesPerPack * parseInt(document.getElementById('stock-packs-qty').value));
+        let piecesPerPack = parseFloat(document.getElementById('stock-pieces-per-pack').value) || 1;
+        let calculatedQty = (type === 'single') ? parseFloat(document.getElementById('stock-qty').value) : (piecesPerPack * parseFloat(document.getElementById('stock-packs-qty').value));
         
         batchItemsList.push({
-            name, group, qty: calculatedQty, type,
+            name, group, unitType, qty: calculatedQty, type,
             singleCost: (type === 'single') ? costPrice : (costPrice / piecesPerPack),
             singleSell: (type === 'single') ? sellPrice : (sellPrice / piecesPerPack),
             wholesaleSell: (type === 'wholesale') ? sellPrice : (sellPrice * piecesPerPack),
@@ -1240,7 +1270,8 @@
     function renderBatchTable() {
         const body = document.getElementById("batch-table-body"); body.innerHTML = '';
         batchItemsList.forEach((item, i) => {
-            body.innerHTML += `<tr><td>${escapeHTML(item.name)}</td><td>${item.qty} قطعة</td><td><button class="btn-danger btn-table" onclick="removeBatchRow(${i})"><i class="fa-solid fa-xmark"></i></button></td></tr>`;
+            const unitStr = item.unitType === 'kg' ? 'كجم' : 'قطعة';
+            body.innerHTML += `<tr><td>${escapeHTML(item.name)}</td><td>${item.qty} ${unitStr}</td><td><button class="btn-danger btn-table" onclick="removeBatchRow(${i})"><i class="fa-solid fa-xmark"></i></button></td></tr>`;
         });
     }
 
@@ -1272,6 +1303,7 @@
                 const prodRef = db.collection("inventory").doc(existing.id);
                 batch.update(prodRef, {
                     qty: firebase.firestore.FieldValue.increment(item.qty),
+                    unitType: item.unitType || existing.unitType || 'piece',
                     singleCost: item.singleCost,
                     singleSell: item.singleSell,
                     wholesaleSell: item.wholesaleSell,
@@ -1364,18 +1396,31 @@
         const product = inventory.find(i => i.id === itemId);
         if(!product || product.qty <= 0) { alert("المادة نفذت تماماً!"); return; }
 
-        const existing = cart.find(c => c.id === itemId && c.type === 'single');
-        let neededPieces = existing ? (existing.qty + 1) : 1;
+        const isKg = product.unitType === 'kg';
+        let weightOrQty = 1;
 
-        if(neededPieces > product.qty) { alert(`المخزن المتاح (${product.qty}) قطعة فقط.`); return; }
+        if (isKg) {
+            const inputVal = prompt(`أدخل الوزن المطلوب بالكيلوغرامات أو الغرامات للمادة (${product.name}):\n(مثال: 0.25 لـ 250 غرام ، 0.5 للنصف كيلو ، 1.5 للكيلو ونصف)`, "0.5");
+            if (!inputVal) return;
+            weightOrQty = parseFloat(inputVal);
+            if (isNaN(weightOrQty) || weightOrQty <= 0) { alert("الوزن غير صحيح!"); return; }
+        }
 
-        if(existing) { existing.qty += 1; } 
-        else {
+        const existing = cart.find(c => c.id === itemId && c.type === (isKg ? 'kg' : 'single'));
+        let neededQty = existing ? (existing.qty + weightOrQty) : weightOrQty;
+
+        if(neededQty > product.qty) { alert(`المخزن المتاح (${product.qty} ${isKg?'كجم':'قطع'}) فقط.`); return; }
+
+        if(existing) {
+            existing.qty += weightOrQty;
+        } else {
             cart.push({
                 id: product.id, name: product.name, group: product.group,
-                type: 'single', price: product.singleSell, costPrice: product.singleCost,
+                unitType: product.unitType || 'piece',
+                type: isKg ? 'kg' : 'single',
+                price: product.singleSell, costPrice: product.singleCost,
                 singleSell: product.singleSell, wholesaleSell: product.wholesaleSell,
-                piecesPerPack: product.piecesPerPack || 1, qty: 1
+                piecesPerPack: product.piecesPerPack || 1, qty: weightOrQty
             });
         }
         updateCartUI();
@@ -1388,26 +1433,31 @@
         if(cart.length === 0) list.innerHTML = '<p style="text-align: center; color: var(--text-secondary); font-size: 13px; margin-top:30px;">اضغط على أي مادة لإضافتها للسلة</p>';
 
         cart.forEach((item, index) => {
+            const isKg = item.unitType === 'kg';
             const itemTotal = item.qty * item.price; total += itemTotal;
+            const displayQtyLabel = isKg ? (item.qty >= 1 ? `${item.qty} كجم` : `${item.qty * 1000} غرام`) : `${item.qty} قطعة`;
+
             list.innerHTML += `
                 <div class="cart-item-row">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <strong>${escapeHTML(item.name)}</strong>
+                        <strong>${escapeHTML(item.name)} ${isKg ? `(${displayQtyLabel})` : ''}</strong>
                         <button class="btn-danger btn-table" onclick="removeFromCart(${index})"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     <div style="display:flex; gap:6px; align-items:center;">
+                        ${!isKg ? `
                         <select onchange="changeCartType(${index}, this.value)" style="padding:4px; font-size:11px; width:70px;">
                             <option value="single" ${item.type === 'single' ? 'selected' : ''}>مفرد</option>
                             <option value="wholesale" ${item.type === 'wholesale' ? 'selected' : ''}>جملة</option>
-                        </select>
-                        <input type="number" value="${item.qty}" min="1" style="width:50px; padding:4px; text-align:center;" onchange="changeCartQty(${index}, this.value)">
-                        <input type="number" value="${item.price}" style="width:90px; padding:4px; text-align:center; color:var(--accent-gold); font-weight:bold;" onchange="changeCartPrice(${index}, this.value)">
+                        </select>` : '<span style="font-size:11px; color:var(--accent-gold); font-weight:bold;">⚖️ وزن</span>'}
+                        
+                        <input type="number" value="${item.qty}" step="${isKg ? '0.05' : '1'}" min="0.01" style="width:65px; padding:4px; text-align:center;" onchange="changeCartQty(${index}, this.value)">
+                        <input type="number" value="${item.price}" style="width:85px; padding:4px; text-align:center; color:var(--accent-gold); font-weight:bold;" onchange="changeCartPrice(${index}, this.value)">
                     </div>
                 </div>
             `;
         });
 
-        document.getElementById("cart-total-amount").innerText = total.toLocaleString() + " د.ع";
+        document.getElementById("cart-total-amount").innerText = Math.round(total).toLocaleString() + " د.ع";
     }
 
     function changeCartType(index, newType) {
@@ -1422,10 +1472,10 @@
 
     function changeCartQty(index, newQty) {
         playBeepSound();
-        const q = parseInt(newQty); if(isNaN(q) || q <= 0) return;
+        const q = parseFloat(newQty); if(isNaN(q) || q <= 0) return;
         const item = cart[index]; const prod = inventory.find(i => i.id === item.id);
         const piecesNeeded = (item.type === 'wholesale') ? (q * (prod.piecesPerPack || 1)) : q;
-        if(piecesNeeded > prod.qty) { alert(`المخزن المتاح (${prod.qty}) قطعة فقط!`); updateCartUI(); return; }
+        if(piecesNeeded > prod.qty) { alert(`المخزن المتاح (${prod.qty} ${prod.unitType==='kg'?'كجم':'قطع'}) فقط!`); updateCartUI(); return; }
         cart[index].qty = q; updateCartUI();
     }
 
@@ -1450,16 +1500,17 @@
         cart.forEach(item => {
             const prod = inventory.find(i => i.id === item.id);
             if(prod) {
-                let qtyToDeduct = (item.type === 'single') ? item.qty : (item.qty * (prod.piecesPerPack || 1));
+                let qtyToDeduct = (item.type === 'single' || item.type === 'kg') ? item.qty : (item.qty * (prod.piecesPerPack || 1));
                 const prodRef = db.collection("inventory").doc(prod.id);
                 batch.update(prodRef, { qty: firebase.firestore.FieldValue.increment(-qtyToDeduct) });
 
                 const itemTotal = item.qty * item.price; totalAmount += itemTotal;
-                receiptItems.push({ name: item.name, type: item.type === 'single' ? 'مفرد' : 'جملة', qty: item.qty, price: item.price });
+                const typeLabel = item.unitType === 'kg' ? (item.qty >= 1 ? `${item.qty} كجم` : `${item.qty*1000} غرام`) : (item.type === 'single' ? 'مفرد' : 'جملة');
+                receiptItems.push({ name: item.name, type: typeLabel, qty: item.qty, price: item.price });
 
                 const saleRef = db.collection("sales").doc();
                 batch.set(saleRef, {
-                    name: item.name, group: item.group, type: item.type === 'single' ? 'مفرد' : 'جملة',
+                    name: item.name, group: item.group, type: typeLabel,
                     qty: item.qty, unitPrice: item.price, total: itemTotal, costTotal: item.qty * item.costPrice,
                     paymentStatus, customerName: paymentStatus === 'debt' ? customerName : '',
                     date: dateStr, rawDate: now.toLocaleDateString('en-CA'), timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -1472,14 +1523,14 @@
 
         try { confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } }); } catch(e) {}
 
-        showReceiptModal(dateStr, receiptItems, totalAmount, paymentStatus, customerName);
+        showReceiptModal(dateStr, receiptItems, Math.round(totalAmount), paymentStatus, customerName);
         cart = []; updateCartUI(); document.getElementById("cart-customer-name").value = '';
     }
 
     function showReceiptModal(dateStr, items, total, paymentStatus, customerName) {
         document.getElementById("receipt-date").innerText = dateStr;
         const body = document.getElementById("receipt-items-body"); body.innerHTML = '';
-        items.forEach(i => { body.innerHTML += `<tr><td style="padding:4px 0;">${escapeHTML(i.name)}</td><td style="text-align:center;">${i.type}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:left;">${(i.price*i.qty).toLocaleString()}</td></tr>`; });
+        items.forEach(i => { body.innerHTML += `<tr><td style="padding:4px 0;">${escapeHTML(i.name)}</td><td style="text-align:center;">${i.type}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:left;">${Math.round(i.price*i.qty).toLocaleString()}</td></tr>`; });
         document.getElementById("receipt-total").innerText = total.toLocaleString() + " د.ع";
         document.getElementById("receipt-customer-info").innerText = paymentStatus === 'debt' ? `الدفع: دين (${escapeHTML(customerName)})` : "الدفع: نقداً (Cash)";
         
@@ -1565,8 +1616,8 @@
             }
         });
 
-        document.getElementById("report-period-sales").innerText = periodSales.toLocaleString() + " د.ع";
-        document.getElementById("report-period-profit").innerText = periodProfit.toLocaleString() + " د.ع";
+        document.getElementById("report-period-sales").innerText = Math.round(periodSales).toLocaleString() + " د.ع";
+        document.getElementById("report-period-profit").innerText = Math.round(periodProfit).toLocaleString() + " د.ع";
         document.getElementById("report-period-count").innerText = `${filteredSalesData.length} عملية`;
     }
 
@@ -1578,9 +1629,11 @@
     function renderInventoryUI() {
         const invBody = document.querySelector('#inventory-table tbody'); if(!invBody) return; invBody.innerHTML = '';
         inventory.forEach(p => {
+            const isKg = p.unitType === 'kg';
+            const unitLabel = isKg ? '<span class="badge badge-info">⚖️ كغم/غرام</span>' : '<span class="badge badge-gold">📦 قطعة</span>';
             const isLow = p.qty <= 5;
             const isOut = p.qty <= 0;
-            const stockBadge = isOut ? `<span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> نفذت</span>` : (isLow ? `<span class="badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i> ${p.qty} قطعة</span>` : `<span class="badge badge-success">${p.qty} قطعة</span>`);
+            const stockBadge = isOut ? `<span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> نفذت</span>` : (isLow ? `<span class="badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i> ${p.qty} ${isKg?'كجم':'قطع'}</span>` : `<span class="badge badge-success">${p.qty} ${isKg?'كجم':'قطع'}</span>`);
             
             // زر التبديل والتحكم بنشر المادة في متجر الأونلاين
             const isVisibleInShop = p.showInShop !== false;
@@ -1589,7 +1642,7 @@
                 : `<button class="btn-secondary btn-table" onclick="toggleShopVisibility('${p.id}', true)"><i class="fa-solid fa-eye-slash"></i> مخفي من المتجر</button>`;
 
             const actions = (currentUserRole === 'admin') ? `<td><button class="btn-danger btn-table" onclick="deleteInventoryRow('${p.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td>` : `<td class="admin-only">-</td>`;
-            invBody.innerHTML += `<tr><td><span class="badge badge-gold">${escapeHTML(p.group)}</span></td><td><strong>${escapeHTML(p.name)}</strong></td><td>${stockBadge}</td><td>${(p.singleCost||0).toLocaleString()} د.ع</td><td>${(p.singleSell||0).toLocaleString()} د.ع</td><td>${(p.wholesaleSell||0).toLocaleString()} د.ع</td><td>${shopToggleBtn}</td>${actions}</tr>`;
+            invBody.innerHTML += `<tr><td><span class="badge badge-gold">${escapeHTML(p.group)}</span></td><td><strong>${escapeHTML(p.name)}</strong></td><td>${unitLabel}</td><td>${stockBadge}</td><td>${(p.singleCost||0).toLocaleString()} د.ع</td><td>${(p.singleSell||0).toLocaleString()} د.ع</td><td>${isKg ? '-' : (p.wholesaleSell||0).toLocaleString() + ' د.ع'}</td><td>${shopToggleBtn}</td>${actions}</tr>`;
         });
     }
 
@@ -1604,7 +1657,7 @@
         const listToRender = filteredSalesData.length > 0 || (document.getElementById("sales-date-from").value || document.getElementById("sales-date-to").value) ? filteredSalesData : sales;
 
         listToRender.forEach(s => {
-            const typeBadge = s.type === 'مفرد' ? '<span class="badge badge-info">مفرد</span>' : '<span class="badge badge-gold">جملة</span>';
+            const typeBadge = s.type.includes('كجم') || s.type.includes('غرام') || s.type === 'وزن' ? `<span class="badge badge-info">⚖️ ${escapeHTML(s.type)}</span>` : (s.type === 'مفرد' ? '<span class="badge badge-info">مفرد</span>' : '<span class="badge badge-gold">جملة</span>');
             const statusBadge = s.paymentStatus === 'debt' ? `<span class="badge badge-danger"><i class="fa-solid fa-circle-dot"></i> آجل (${escapeHTML(s.customerName)})</span>` : `<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> نقداً</span>`;
             const actions = (currentUserRole === 'admin') ? `<td><button class="btn-danger btn-table" onclick="deleteSaleRow('${s.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td>` : `<td class="admin-only">-</td>`;
             salesBody.innerHTML += `
@@ -1614,7 +1667,7 @@
                     <td>${typeBadge}</td>
                     <td>${s.qty}</td>
                     <td>${(s.unitPrice||0).toLocaleString()} د.ع</td>
-                    <td><strong>${s.total.toLocaleString()} د.ع</strong></td>
+                    <td><strong>${Math.round(s.total).toLocaleString()} د.ع</strong></td>
                     <td>${statusBadge}</td>
                     <td><small>${escapeHTML(s.date)}</small></td>
                     <td><button class="btn-primary btn-table" onclick="reprintSaleInvoice('${s.id}')"><i class="fa-solid fa-print"></i> طباعة الفاتورة</button></td>
@@ -1640,8 +1693,8 @@
                     <td><strong>${escapeHTML(s.customerName)}</strong></td>
                     <td>${escapeHTML(s.name)}</td>
                     <td>${s.qty}</td>
-                    <td style="color:var(--danger); font-weight:800; font-size:15px;">${remaining.toLocaleString()} د.ع</td>
-                    <td style="color:var(--success); font-weight:700;">${paid.toLocaleString()} د.ع</td>
+                    <td style="color:var(--danger); font-weight:800; font-size:15px;">${Math.round(remaining).toLocaleString()} د.ع</td>
+                    <td style="color:var(--success); font-weight:700;">${Math.round(paid).toLocaleString()} د.ع</td>
                     <td><small>${escapeHTML(s.date)}</small></td>
                     <td style="display:flex; gap:6px;">
                         <button class="btn-success btn-table" onclick="payOffDebtFull('${s.id}', ${remaining}, ${paid})"><i class="fa-solid fa-check"></i> تسديد كامل</button>
@@ -1663,7 +1716,7 @@
     }
 
     function payOffDebtPartial(saleId, currentRemaining, currentPaid) {
-        const inputAmount = prompt(`المبلغ المتبقي المطلوب: (${currentRemaining.toLocaleString()} د.ع)\nأدخل المبلغ المدفوع حالياً:`);
+        const inputAmount = prompt(`المبلغ المتبقي المطلوب: (${Math.round(currentRemaining).toLocaleString()} د.ع)\nأدخل المبلغ المدفوع حالياً:`);
         const amount = parseFloat(inputAmount);
         if(!isNaN(amount) && amount > 0) {
             playBeepSound();
@@ -1677,7 +1730,7 @@
                 const newPaid = currentPaid + amount;
                 const remainingLeft = currentRemaining - amount;
                 db.collection("sales").doc(saleId).update({ paidAmount: newPaid });
-                alert(`تم استلام ${amount.toLocaleString()} د.ع والمبلغ المتبقي للزبون هو ${remainingLeft.toLocaleString()} د.ع`);
+                alert(`تم استلام ${amount.toLocaleString()} د.ع والمبلغ المتبقي للزبون هو ${Math.round(remainingLeft).toLocaleString()} د.ع`);
             }
         }
     }
@@ -1699,10 +1752,10 @@
 
         expenses.forEach(e => { if(e.rawDate === todayStr) todayExpenses += e.amount; });
 
-        document.getElementById("dash-sales-today").innerText = todaySales.toLocaleString() + " د.ع";
-        document.getElementById("dash-profit-today").innerText = (todayProfit - todayExpenses).toLocaleString() + " د.ع";
-        document.getElementById("dash-total-debts").innerText = totalDebts.toLocaleString() + " د.ع";
-        document.getElementById("dash-expenses-today").innerText = todayExpenses.toLocaleString() + " د.ع";
+        document.getElementById("dash-sales-today").innerText = Math.round(todaySales).toLocaleString() + " د.ع";
+        document.getElementById("dash-profit-today").innerText = Math.round(todayProfit - todayExpenses).toLocaleString() + " د.ع";
+        document.getElementById("dash-total-debts").innerText = Math.round(totalDebts).toLocaleString() + " د.ع";
+        document.getElementById("dash-expenses-today").innerText = Math.round(todayExpenses).toLocaleString() + " د.ع";
     }
 
     function openTab(tabId, btn) {
