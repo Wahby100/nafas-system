@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nafas Enterprise System | نظام إدارة نفَس</title>
+    <title>Nafas Enterprise System | نظام إدارة النفَس</title>
     <!-- مكتبة أكسل -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- خط Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    
     <!-- FontAwesome 6 Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -26,7 +25,6 @@
             --accent-gold: #f39c12;
             --accent-orange: #d35400;
             --gradient-accent: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-            --gradient-card: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 100%);
             --text-primary: #ffffff;
             --text-secondary: #94a3b8;
             --success: #10b981;
@@ -92,10 +90,7 @@
 
         .main-content { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
 
-        .top-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 22px; border-radius: 18px;
-        }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 22px; border-radius: 18px; }
         .status-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--success); background: rgba(16, 185, 129, 0.1); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.2); }
 
         .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
@@ -185,14 +180,8 @@
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 1000; display: none; justify-content: center; align-items: center; }
         .receipt-card { background: #fff; color: #1e293b; width: 350px; padding: 25px; border-radius: 16px; font-family: 'Tajawal', sans-serif; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
 
-        /* ✨ تنسيق شريط الحقوق بالسيدبار */
         .sidebar-footer {
-            padding: 10px;
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            line-height: 1.5;
+            padding: 10px; font-size: 11px; color: var(--text-secondary); text-align: center; border-top: 1px solid rgba(255,255,255,0.06); line-height: 1.5;
         }
         .sidebar-footer strong { color: var(--accent-gold); }
 
@@ -257,7 +246,6 @@
                     <button class="btn-danger btn-table" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
                 </div>
 
-                <!-- ✨ حقوق المطور بالسيدبار مع معلوماتك -->
                 <div class="sidebar-footer">
                     <div>Designed by <strong>Wahby</strong></div>
                     <div>📧 wahby.razaq100@gmail.com</div>
@@ -469,7 +457,7 @@
                 <div class="card glass-panel">
                     <div class="card-header-flex"><h2><i class="fa-solid fa-book-bookmark"></i> سجل الديون والحسابات الآجلة</h2></div>
                     <table id="debts-table">
-                        <thead><tr><th>اسم الزبون</th><th>المادة</th><th>الكمية</th><th>المبلغ المطلوب</th><th>التاريخ</th><th>الإجراء وتسديد الدين</th></tr></thead>
+                        <thead><tr><th>اسم الزبون</th><th>المادة</th><th>الكمية</th><th>المبلغ المطلوب</th><th>المسدد</th><th>التاريخ</th><th>الإجراء وتسديد الدين</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -569,7 +557,7 @@
                     <p id="receipt-customer-info" style="margin:6px 0 0 0; font-size:11px; font-weight:700;"></p>
                     
                     <div style="margin-top:15px; border-top:1px solid #ccc; padding-top:8px; font-size:11px; font-weight:700; color:#222;">
-                        شكراً لزيارتكم متجر نفَس، نسعد بخدمتكم دائماً ونتمنى لكم يوماً جميلاً! ✨
+                        شكراً لزيارتكم محل النفَس، نسعد بخدمتكم دائماً ونتمنى لكم يوماً جميلاً! ✨
                     </div>
                 </div>
             </div>
@@ -585,7 +573,7 @@
         <div>
             <div class="receipt-card" id="online-invoice-card">
                 <div style="text-align:center; border-bottom:2px dashed #000; padding-bottom:8px; margin-bottom:10px;">
-                    <h1 style="margin:0; color:#000; font-size:24px; font-weight:800;">متجر نفَس | Nafas</h1>
+                    <h1 style="margin:0; color:#000; font-size:24px; font-weight:800;">محل النفَس | Nafas</h1>
                     <div style="font-size:11px; color:#333;">بغداد - الدورة - شارع المعلمين - تحت السقيفة</div>
                     <div style="font-size:11px; color:#333;">هاتف: 07716097656 - 07706284809</div>
                     <div style="margin-top:6px; font-weight:800; background:#000; color:#fff; padding:3px; font-size:12px;">فاتورة طلب توصيل أونلاين</div>
@@ -618,7 +606,7 @@
                     </div>
                     <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                         <span>أجور التوصيل:</span>
-                        <strong>5,000 د.ع</strong>
+                        <strong id="inv-delivery-fee">5,000 د.ع</strong>
                     </div>
                     <div style="display:flex; justify-content:space-between; font-weight:800; font-size:15px; border-top:1px solid #000; padding-top:4px; margin-top:4px;">
                         <span>المجموع النهائي:</span>
@@ -627,7 +615,7 @@
                 </div>
 
                 <div style="text-align:center; margin-top:12px; font-size:11px; font-weight:700; border-top:1px solid #eee; padding-top:6px;">
-                    شكراً لتسوقكم من متجر نفَس 🌹
+                    شكراً لتسوقكم من محل النفَس 🌹
                 </div>
             </div>
 
@@ -639,6 +627,17 @@
     </div>
 
 <script>
+    // دالة حماية وتنظيف النصوص لمنع ثغرات XSS
+    function escapeHTML(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
     setInterval(() => {
         const now = new Date();
         document.getElementById('live-clock').innerText = now.toLocaleDateString('en-CA') + " | " + now.toLocaleTimeString('ar-EG');
@@ -664,6 +663,10 @@
     let cart = []; let batchItemsList = [];
     let filteredSalesData = [];
     let previousOrdersCount = 0;
+    let audioContextReady = false;
+
+    // تفعيل الصوت التلقائي عند أول نقرة للكاشير
+    window.addEventListener('click', () => { audioContextReady = true; }, { once: true });
 
     auth.onAuthStateChanged(user => {
         if (user) {
@@ -731,7 +734,7 @@
             onlineOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             const pendingOrders = onlineOrders.filter(o => o.status === 'pending');
             
-            if(pendingOrders.length > previousOrdersCount) {
+            if(pendingOrders.length > previousOrdersCount && audioContextReady) {
                 playOrderBeep();
             }
             previousOrdersCount = pendingOrders.length;
@@ -783,14 +786,14 @@
         }
 
         pendingOrders.forEach(o => {
-            let itemsSummary = o.items.map(i => `${i.name} (×${i.qty})`).join(" ، ");
+            let itemsSummary = (o.items || []).map(i => `${escapeHTML(i.name)} (×${i.qty})`).join(" ، ");
             body.innerHTML += `
                 <tr>
-                    <td><strong>${o.customerName}</strong></td>
-                    <td><small>📞 ${o.phone}<br>📍 ${o.address}</small></td>
+                    <td><strong>${escapeHTML(o.customerName)}</strong></td>
+                    <td><small>📞 ${escapeHTML(o.phone)}<br>📍 ${escapeHTML(o.address)}</small></td>
                     <td><small>${itemsSummary}</small></td>
-                    <td style="color:var(--success); font-weight:800;">${o.totalAmount.toLocaleString()} د.ع</td>
-                    <td><small>${o.date}</small></td>
+                    <td style="color:var(--success); font-weight:800;">${(o.totalAmount || 0).toLocaleString()} د.ع</td>
+                    <td><small>${escapeHTML(o.date)}</small></td>
                     <td style="display:flex; gap:6px;">
                         <button class="btn-success btn-table" onclick="acceptOnlineOrder('${o.id}')"><i class="fa-solid fa-check"></i> قبول وطباعة الفاتورة</button>
                         <button class="btn-danger btn-table" onclick="rejectOnlineOrder('${o.id}')"><i class="fa-solid fa-xmark"></i> رفض</button>
@@ -804,10 +807,11 @@
         const order = onlineOrders.find(o => o.id === orderId);
         if(!order) return;
 
+        // التاكد من توفر جميع المواد في المخزن قبل القبول
         for (let item of order.items) {
-            const prod = inventory.find(i => i.id === item.id);
+            const prod = inventory.find(i => i.id === item.id || i.name === item.name);
             if(!prod || prod.qty < item.qty) {
-                alert(`خطأ: المادة (${item.name}) لا تملك رصيداً كافياً بالمخزن للقبول!`);
+                alert(`خطأ: المادة (${item.name}) لا تملك رصيداً كافياً بالمخزن للقبول! المتاح: (${prod ? prod.qty : 0}) قطعة`);
                 return;
             }
         }
@@ -818,19 +822,51 @@
             const dateStr = now.toLocaleDateString('en-CA') + " " + now.toLocaleTimeString('ar-EG');
 
             order.items.forEach(item => {
-                const prodRef = db.collection("inventory").doc(item.id);
-                const prod = inventory.find(i => i.id === item.id);
-                
-                batch.update(prodRef, { qty: Math.max(0, prod.qty - item.qty) });
+                const prod = inventory.find(i => i.id === item.id || i.name === item.name);
+                if(prod) {
+                    const prodRef = db.collection("inventory").doc(prod.id);
+                    // الخصم الذري التزامني لعدم حدوث تضارب
+                    batch.update(prodRef, { qty: firebase.firestore.FieldValue.increment(-item.qty) });
 
-                const saleRef = db.collection("sales").doc();
-                batch.set(saleRef, {
-                    name: item.name, group: item.group || 'أونلاين', type: 'مفرد',
-                    qty: item.qty, unitPrice: item.price, total: item.qty * item.price, costTotal: item.qty * (item.costPrice || 0),
-                    paymentStatus: 'cash', customerName: `${order.customerName} (أونلاين)`,
-                    date: dateStr, rawDate: now.toLocaleDateString('en-CA'), timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                    // جلب سعر التكلفة من المخزن المحلي بدقة
+                    const costPrice = prod.singleCost || 0;
+
+                    const saleRef = db.collection("sales").doc();
+                    batch.set(saleRef, {
+                        name: item.name,
+                        group: item.group || prod.group || 'أونلاين',
+                        type: 'مفرد',
+                        qty: item.qty,
+                        unitPrice: item.price,
+                        total: item.qty * item.price,
+                        costTotal: item.qty * costPrice,
+                        paymentStatus: 'cash',
+                        customerName: `${order.customerName} (أونلاين)`,
+                        date: dateStr,
+                        rawDate: now.toLocaleDateString('en-CA'),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
             });
+
+            // تسجيل أجور التوصيل كبند مبيعات إن وجدت
+            if(order.deliveryFee && order.deliveryFee > 0) {
+                const deliverySaleRef = db.collection("sales").doc();
+                batch.set(deliverySaleRef, {
+                    name: 'أجور توصيل أونلاين',
+                    group: 'خدمات',
+                    type: 'خدمة',
+                    qty: 1,
+                    unitPrice: order.deliveryFee,
+                    total: order.deliveryFee,
+                    costTotal: 0,
+                    paymentStatus: 'cash',
+                    customerName: `${order.customerName} (أونلاين)`,
+                    date: dateStr,
+                    rawDate: now.toLocaleDateString('en-CA'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }
 
             const orderRef = db.collection("onlineOrders").doc(orderId);
             batch.update(orderRef, { status: "accepted" });
@@ -858,15 +894,16 @@
         order.items.forEach(item => {
             itemsBody.innerHTML += `
                 <tr>
-                    <td style="padding:4px 0;">${item.name}</td>
+                    <td style="padding:4px 0;">${escapeHTML(item.name)}</td>
                     <td style="text-align:center;">${item.qty}</td>
-                    <td style="text-align:center;">${item.price.toLocaleString()}</td>
-                    <td style="text-align:left;">${(item.price * item.qty).toLocaleString()}</td>
+                    <td style="text-align:center;">${(item.price || 0).toLocaleString()}</td>
+                    <td style="text-align:left;">${((item.price || 0) * item.qty).toLocaleString()}</td>
                 </tr>
             `;
         });
 
         document.getElementById("inv-items-total").innerText = (order.itemsTotal || 0).toLocaleString() + " د.ع";
+        document.getElementById("inv-delivery-fee").innerText = (order.deliveryFee || 5000).toLocaleString() + " د.ع";
         document.getElementById("inv-final-total").innerText = (order.totalAmount || 0).toLocaleString() + " د.ع";
 
         document.getElementById("print-online-invoice-modal").style.display = "flex";
@@ -889,7 +926,7 @@
         if(lowItems.length > 0) {
             container.style.display = "flex";
             document.getElementById("low-stock-count-badge").innerText = `${lowItems.length} مواد قابلة للنفاد`;
-            document.getElementById("low-stock-items-text").innerText = lowItems.map(i => `${i.name} (${i.qty})`).join(" ، ");
+            document.getElementById("low-stock-items-text").innerText = lowItems.map(i => `${escapeHTML(i.name)} (${i.qty})`).join(" ، ");
         } else {
             container.style.display = "none";
         }
@@ -908,8 +945,8 @@
             container.innerHTML += `
                 <div class="price-item-card">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="margin:0; font-size:15px; color:#fff;">${item.name}</h3>
-                        <span class="badge badge-gold">${item.group}</span>
+                        <h3 style="margin:0; font-size:15px; color:#fff;">${escapeHTML(item.name)}</h3>
+                        <span class="badge badge-gold">${escapeHTML(item.group)}</span>
                     </div>
                     <div>
                         <div class="price-row-detail">
@@ -951,8 +988,8 @@
             pBox.innerHTML += `
                 <div class="pos-card" onclick="addToCart('${item.id}')">
                     <div>
-                        <span class="badge badge-gold">${item.group}</span>
-                        <h4>${item.name}</h4>
+                        <span class="badge badge-gold">${escapeHTML(item.group)}</span>
+                        <h4>${escapeHTML(item.name)}</h4>
                     </div>
                     <div>
                         <div class="price">مفرد: ${(item.singleSell||0).toLocaleString()} د.ع</div>
@@ -994,23 +1031,35 @@
     function renderBatchTable() {
         const body = document.getElementById("batch-table-body"); body.innerHTML = '';
         batchItemsList.forEach((item, i) => {
-            body.innerHTML += `<tr><td>${item.name}</td><td>${item.qty} قطعة</td><td><button class="btn-danger btn-table" onclick="removeBatchRow(${i})"><i class="fa-solid fa-xmark"></i></button></td></tr>`;
+            body.innerHTML += `<tr><td>${escapeHTML(item.name)}</td><td>${item.qty} قطعة</td><td><button class="btn-danger btn-table" onclick="removeBatchRow(${i})"><i class="fa-solid fa-xmark"></i></button></td></tr>`;
         });
     }
 
     function removeBatchRow(index) { batchItemsList.splice(index, 1); renderBatchTable(); }
 
-    function saveAllBatchItems() {
+    async function saveAllBatchItems() {
         if(batchItemsList.length === 0) { alert("القائمة فارغة!"); return; }
+        
+        const batch = db.batch();
+
         batchItemsList.forEach(item => {
             const existing = inventory.find(p => p.name === item.name);
             if(existing) {
-                db.collection("inventory").doc(existing.id).update({
-                    qty: existing.qty + item.qty, singleCost: item.singleCost, singleSell: item.singleSell, wholesaleSell: item.wholesaleSell
+                const prodRef = db.collection("inventory").doc(existing.id);
+                batch.update(prodRef, {
+                    qty: firebase.firestore.FieldValue.increment(item.qty),
+                    singleCost: item.singleCost,
+                    singleSell: item.singleSell,
+                    wholesaleSell: item.wholesaleSell
                 });
-            } else { db.collection("inventory").add(item); }
+            } else {
+                const newRef = db.collection("inventory").doc();
+                batch.set(newRef, item);
+            }
         });
-        alert("تم حفظ الشحنات بنجاح!");
+
+        await batch.commit();
+        alert("تم حفظ جميع الشحنات بنجاح وتحديث المخزن!");
         batchItemsList = []; renderBatchTable();
     }
 
@@ -1046,7 +1095,7 @@
             list.innerHTML += `
                 <div class="cart-item-row">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <strong>${item.name}</strong>
+                        <strong>${escapeHTML(item.name)}</strong>
                         <button class="btn-danger btn-table" onclick="removeFromCart(${index})"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     <div style="display:flex; gap:6px; align-items:center;">
@@ -1088,12 +1137,13 @@
     function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
     function toggleCartCustomerName() { const status = document.getElementById("cart-payment-status").value; document.getElementById("cart-customer-group").style.display = (status === 'debt') ? 'block' : 'none'; }
 
-    function checkoutCart() {
+    async function checkoutCart() {
         if(cart.length === 0) { alert("السلة فارغة!"); return; }
         const paymentStatus = document.getElementById("cart-payment-status").value;
         const customerName = document.getElementById("cart-customer-name").value.trim();
         if(paymentStatus === 'debt' && !customerName) { alert("يرجى كتابة اسم الزبون!"); return; }
 
+        const batch = db.batch();
         const now = new Date();
         const dateStr = now.toLocaleDateString('en-CA') + " " + now.toLocaleTimeString('ar-EG');
         let totalAmount = 0; const receiptItems = [];
@@ -1102,12 +1152,16 @@
             const prod = inventory.find(i => i.id === item.id);
             if(prod) {
                 let qtyToDeduct = (item.type === 'single') ? item.qty : (item.qty * (prod.piecesPerPack || 1));
-                db.collection("inventory").doc(prod.id).update({ qty: Math.max(0, prod.qty - qtyToDeduct) });
+                const prodRef = db.collection("inventory").doc(prod.id);
+                
+                // الخصم الذري لعدم تضارب الكاشيرات
+                batch.update(prodRef, { qty: firebase.firestore.FieldValue.increment(-qtyToDeduct) });
 
                 const itemTotal = item.qty * item.price; totalAmount += itemTotal;
                 receiptItems.push({ name: item.name, type: item.type === 'single' ? 'مفرد' : 'جملة', qty: item.qty, price: item.price });
 
-                db.collection("sales").add({
+                const saleRef = db.collection("sales").doc();
+                batch.set(saleRef, {
                     name: item.name, group: item.group, type: item.type === 'single' ? 'مفرد' : 'جملة',
                     qty: item.qty, unitPrice: item.price, total: itemTotal, costTotal: item.qty * item.costPrice,
                     paymentStatus, customerName: paymentStatus === 'debt' ? customerName : '',
@@ -1116,6 +1170,7 @@
             }
         });
 
+        await batch.commit();
         showReceiptModal(dateStr, receiptItems, totalAmount, paymentStatus, customerName);
         cart = []; updateCartUI(); document.getElementById("cart-customer-name").value = '';
     }
@@ -1123,9 +1178,9 @@
     function showReceiptModal(dateStr, items, total, paymentStatus, customerName) {
         document.getElementById("receipt-date").innerText = dateStr;
         const body = document.getElementById("receipt-items-body"); body.innerHTML = '';
-        items.forEach(i => { body.innerHTML += `<tr><td style="padding:4px 0;">${i.name}</td><td style="text-align:center;">${i.type}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:left;">${(i.price*i.qty).toLocaleString()}</td></tr>`; });
+        items.forEach(i => { body.innerHTML += `<tr><td style="padding:4px 0;">${escapeHTML(i.name)}</td><td style="text-align:center;">${i.type}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:left;">${(i.price*i.qty).toLocaleString()}</td></tr>`; });
         document.getElementById("receipt-total").innerText = total.toLocaleString() + " د.ع";
-        document.getElementById("receipt-customer-info").innerText = paymentStatus === 'debt' ? `الدفع: دين (${customerName})` : "الدفع: نقداً (Cash)";
+        document.getElementById("receipt-customer-info").innerText = paymentStatus === 'debt' ? `الدفع: دين (${escapeHTML(customerName)})` : "الدفع: نقداً (Cash)";
         document.getElementById("receipt-modal").style.display = "flex";
     }
 
@@ -1204,7 +1259,7 @@
             const isOut = p.qty <= 0;
             const stockBadge = isOut ? `<span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> نفذت</span>` : (isLow ? `<span class="badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i> ${p.qty} قطعة</span>` : `<span class="badge badge-success">${p.qty} قطعة</span>`);
             const actions = (currentUserRole === 'admin') ? `<td><button class="btn-danger btn-table" onclick="deleteInventoryRow('${p.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td>` : `<td class="admin-only">-</td>`;
-            invBody.innerHTML += `<tr><td><span class="badge badge-gold">${p.group}</span></td><td><strong>${p.name}</strong></td><td>${stockBadge}</td><td>${(p.singleCost||0).toLocaleString()} د.ع</td><td>${(p.singleSell||0).toLocaleString()} د.ع</td><td>${(p.wholesaleSell||0).toLocaleString()} د.ع</td>${actions}</tr>`;
+            invBody.innerHTML += `<tr><td><span class="badge badge-gold">${escapeHTML(p.group)}</span></td><td><strong>${escapeHTML(p.name)}</strong></td><td>${stockBadge}</td><td>${(p.singleCost||0).toLocaleString()} د.ع</td><td>${(p.singleSell||0).toLocaleString()} د.ع</td><td>${(p.wholesaleSell||0).toLocaleString()} د.ع</td>${actions}</tr>`;
         });
     }
 
@@ -1214,9 +1269,9 @@
 
         listToRender.forEach(s => {
             const typeBadge = s.type === 'مفرد' ? '<span class="badge badge-info">مفرد</span>' : '<span class="badge badge-gold">جملة</span>';
-            const statusBadge = s.paymentStatus === 'debt' ? `<span class="badge badge-danger"><i class="fa-solid fa-circle-dot"></i> آجل (${s.customerName})</span>` : `<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> نقداً</span>`;
+            const statusBadge = s.paymentStatus === 'debt' ? `<span class="badge badge-danger"><i class="fa-solid fa-circle-dot"></i> آجل (${escapeHTML(s.customerName)})</span>` : `<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> نقداً</span>`;
             const actions = (currentUserRole === 'admin') ? `<td><button class="btn-danger btn-table" onclick="deleteSaleRow('${s.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td>` : `<td class="admin-only">-</td>`;
-            salesBody.innerHTML += `<tr><td><span class="badge badge-gold">${s.group}</span></td><td><strong>${s.name}</strong></td><td>${typeBadge}</td><td>${s.qty}</td><td>${(s.unitPrice||0).toLocaleString()} د.ع</td><td><strong>${s.total.toLocaleString()} د.ع</strong></td><td>${statusBadge}</td><td><small>${s.date}</small></td>${actions}</tr>`;
+            salesBody.innerHTML += `<tr><td><span class="badge badge-gold">${escapeHTML(s.group)}</span></td><td><strong>${escapeHTML(s.name)}</strong></td><td>${typeBadge}</td><td>${s.qty}</td><td>${(s.unitPrice||0).toLocaleString()} د.ع</td><td><strong>${s.total.toLocaleString()} د.ع</strong></td><td>${statusBadge}</td><td><small>${escapeHTML(s.date)}</small></td>${actions}</tr>`;
         });
     }
 
@@ -1227,39 +1282,51 @@
     function renderDebtsTable() {
         const dBody = document.querySelector('#debts-table tbody'); if(!dBody) return; dBody.innerHTML = '';
         sales.filter(s => s.paymentStatus === 'debt' && s.total > 0).forEach(s => {
+            const paid = s.paidAmount || 0;
+            const remaining = s.total - paid;
+            if (remaining <= 0) return; // تم سداده كلياً
+
             dBody.innerHTML += `
                 <tr>
-                    <td><strong>${s.customerName}</strong></td>
-                    <td>${s.name}</td>
+                    <td><strong>${escapeHTML(s.customerName)}</strong></td>
+                    <td>${escapeHTML(s.name)}</td>
                     <td>${s.qty}</td>
-                    <td style="color:var(--danger); font-weight:800; font-size:15px;">${s.total.toLocaleString()} د.ع</td>
-                    <td><small>${s.date}</small></td>
+                    <td style="color:var(--danger); font-weight:800; font-size:15px;">${remaining.toLocaleString()} د.ع</td>
+                    <td style="color:var(--success); font-weight:700;">${paid.toLocaleString()} د.ع</td>
+                    <td><small>${escapeHTML(s.date)}</small></td>
                     <td style="display:flex; gap:6px;">
-                        <button class="btn-success btn-table" onclick="payOffDebtFull('${s.id}')"><i class="fa-solid fa-check"></i> تسديد كامل</button>
-                        <button class="btn-primary btn-table" onclick="payOffDebtPartial('${s.id}', ${s.total})"><i class="fa-solid fa-hand-holding-dollar"></i> تسديد جزئي</button>
+                        <button class="btn-success btn-table" onclick="payOffDebtFull('${s.id}', ${remaining}, ${paid})"><i class="fa-solid fa-check"></i> تسديد كامل</button>
+                        <button class="btn-primary btn-table" onclick="payOffDebtPartial('${s.id}', ${remaining}, ${paid})"><i class="fa-solid fa-hand-holding-dollar"></i> تسديد جزئي</button>
                     </td>
                 </tr>
             `;
         });
     }
 
-    function payOffDebtFull(saleId) { 
+    function payOffDebtFull(saleId, remaining, paid) { 
         if(confirm('هل تم استلام المبلغ بالكامل وتسديد الدين؟')) {
-            db.collection("sales").doc(saleId).update({ paymentStatus: 'cash' }); 
+            db.collection("sales").doc(saleId).update({ 
+                paymentStatus: 'cash',
+                paidAmount: paid + remaining
+            }); 
         }
     }
 
-    function payOffDebtPartial(saleId, currentTotal) {
-        const inputAmount = prompt(`المبلغ الحالي المطلوب: (${currentTotal.toLocaleString()} د.ع)\nأدخل المبلغ المدفوع حالياً:`);
+    function payOffDebtPartial(saleId, currentRemaining, currentPaid) {
+        const inputAmount = prompt(`المبلغ المتبقي المطلوب: (${currentRemaining.toLocaleString()} د.ع)\nأدخل المبلغ المدفوع حالياً:`);
         const amount = parseFloat(inputAmount);
         if(!isNaN(amount) && amount > 0) {
-            if(amount >= currentTotal) {
-                db.collection("sales").doc(saleId).update({ paymentStatus: 'cash' });
+            if(amount >= currentRemaining) {
+                db.collection("sales").doc(saleId).update({ 
+                    paymentStatus: 'cash',
+                    paidAmount: currentPaid + currentRemaining
+                });
                 alert("تم تسديد المبلغ بالكامل وإغلاق الدين!");
             } else {
-                const remaining = currentTotal - amount;
-                db.collection("sales").doc(saleId).update({ total: remaining });
-                alert(`تم استلام ${amount.toLocaleString()} د.ع والمبلغ المتبقي للزبون هو ${remaining.toLocaleString()} د.ع`);
+                const newPaid = currentPaid + amount;
+                const remainingLeft = currentRemaining - amount;
+                db.collection("sales").doc(saleId).update({ paidAmount: newPaid });
+                alert(`تم استلام ${amount.toLocaleString()} د.ع والمبلغ المتبقي للزبون هو ${remainingLeft.toLocaleString()} د.ع`);
             }
         }
     }
@@ -1272,7 +1339,11 @@
             if(s.paymentStatus === 'cash' && s.rawDate === todayStr) {
                 todaySales += s.total; todayProfit += (s.total - (s.costTotal || 0));
             }
-            if(s.paymentStatus === 'debt') totalDebts += s.total;
+            if(s.paymentStatus === 'debt') {
+                const paid = s.paidAmount || 0;
+                const rem = s.total - paid;
+                if(rem > 0) totalDebts += rem;
+            }
         });
 
         expenses.forEach(e => { if(e.rawDate === todayStr) todayExpenses += e.amount; });
@@ -1298,7 +1369,7 @@
         const eBody = document.querySelector('#expenses-table tbody'); if(!eBody) return; eBody.innerHTML = '';
         expenses.forEach(e => {
             const actions = (currentUserRole === 'admin') ? `<td><button class="btn-danger btn-table" onclick="deleteExpense('${e.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td>` : `<td class="admin-only">-</td>`;
-            eBody.innerHTML += `<tr><td><strong>${e.title}</strong></td><td style="color:var(--accent-gold); font-weight:800;">${e.amount.toLocaleString()} د.ع</td><td><small>${e.date}</small></td>${actions}</tr>`;
+            eBody.innerHTML += `<tr><td><strong>${escapeHTML(e.title)}</strong></td><td style="color:var(--accent-gold); font-weight:800;">${e.amount.toLocaleString()} د.ع</td><td><small>${escapeHTML(e.date)}</small></td>${actions}</tr>`;
         });
     }
 
@@ -1338,7 +1409,7 @@
     function deleteSaleRow(id) {
         if(confirm('حذف الفاتورة وإرجاع البضاعة للمخزن؟')) {
             const s = sales.find(x => x.id === id); const p = inventory.find(i => i.name === s.name);
-            if(p) db.collection("inventory").doc(p.id).update({ qty: p.qty + s.qty });
+            if(p && s.type !== 'خدمة') db.collection("inventory").doc(p.id).update({ qty: firebase.firestore.FieldValue.increment(s.qty) });
             db.collection("sales").doc(id).delete();
         }
     }
@@ -1360,8 +1431,8 @@
             stockGroupFilter.innerHTML = '<option value="">-- اختر المجموعة أولاً --</option>';
             posGroupFilter.innerHTML = '<option value="">جميع المجموعات</option>';
             groups.forEach(g => {
-                if(gTable && g.id) gTable.innerHTML += `<tr><td>${g.name}</td><td><button class="btn-danger btn-table" onclick="deleteGroup('${g.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td></tr>`;
-                const opt = `<option value="${g.name}">${g.name}</option>`;
+                if(gTable && g.id) gTable.innerHTML += `<tr><td>${escapeHTML(g.name)}</td><td><button class="btn-danger btn-table" onclick="deleteGroup('${g.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td></tr>`;
+                const opt = `<option value="${escapeHTML(g.name)}">${escapeHTML(g.name)}</option>`;
                 itemGroupSelect.innerHTML += opt; stockGroupFilter.innerHTML += opt; posGroupFilter.innerHTML += opt;
             });
         }
@@ -1369,7 +1440,7 @@
 
     function updateDirectoryUI() {
         const dBody = document.querySelector('#custom-items-table tbody'); if(!dBody) return; dBody.innerHTML = '';
-        itemDirectory.forEach(item => { dBody.innerHTML += `<tr><td>${item.name}</td><td><span class="badge badge-gold">${item.group}</span></td><td><button class="btn-danger btn-table" onclick="deleteFromDirectory('${item.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td></tr>`; });
+        itemDirectory.forEach(item => { dBody.innerHTML += `<tr><td>${escapeHTML(item.name)}</td><td><span class="badge badge-gold">${escapeHTML(item.group)}</span></td><td><button class="btn-danger btn-table" onclick="deleteFromDirectory('${item.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td></tr>`; });
     }
 
     document.getElementById("create-user-form").addEventListener("submit", function(e) {
@@ -1386,7 +1457,7 @@
         const uBody = document.querySelector('#users-table tbody'); if(!uBody) return; uBody.innerHTML = '';
         systemUsers.forEach(u => {
             const roleBadge = u.role === 'admin' ? '<span class="badge badge-gold">مدير النظام</span>' : '<span class="badge badge-info">موظف مبيعات</span>';
-            uBody.innerHTML += `<tr><td><strong>${u.email}</strong></td><td>${roleBadge}</td><td><button class="btn-danger btn-table" onclick="deleteUserRow('${u.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td></tr>`;
+            uBody.innerHTML += `<tr><td><strong>${escapeHTML(u.email)}</strong></td><td>${roleBadge}</td><td><button class="btn-danger btn-table" onclick="deleteUserRow('${u.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td></tr>`;
         });
     }
 
