@@ -319,7 +319,7 @@
                 <div class="dash-card glass-panel"><h3>مبيعات اليوم النقدية</h3><div class="amount" id="dash-sales-today" style="color: var(--success);">0 د.ع</div></div>
                 <div class="dash-card glass-panel"><h3>صافي أرباح اليوم</h3><div class="amount" id="dash-profit-today" style="color: var(--info);">0 د.ع</div></div>
                 <div class="dash-card glass-panel"><h3>إجمالي الديون القائمة</h3><div class="amount" id="dash-total-debts" style="color: var(--danger);">0 د.ع</div></div>
-                <div class="dash-card glass-panel"><h3>مصاريف المحل</h3><div class="amount" id="dash-expenses-today" style="color: var(--accent-gold);">0 د.ع</div></div>
+                <div class="dash-card glass-panel"><h3>مصاريف المتجر</h3><div class="amount" id="dash-expenses-today" style="color: var(--accent-gold);">0 د.ع</div></div>
             </div>
 
             <!-- الاستعلام السريع -->
@@ -419,6 +419,9 @@
                                 <div><label>سعر الشراء:</label><input type="number" id="stock-cost-price" min="0" required placeholder="0"></div>
                                 <div><label>سعر البيع:</label><input type="number" id="stock-sell-price" min="0" required placeholder="0"></div>
                             </div>
+                            <div class="form-group">
+                                <label><input type="checkbox" id="stock-show-in-shop" checked style="width:auto; margin-left:6px;"> عرض المادة في متجر الأونلاين تلقائياً</label>
+                            </div>
                             <button type="button" class="btn-primary" style="width:100%; margin-top:10px;" onclick="addQuickBatchRow()"><i class="fa-solid fa-plus"></i> إضافة المادة للقائمة الفورية</button>
                         </form>
 
@@ -434,12 +437,12 @@
 
                     <div class="card glass-panel" style="grid-column: span 2;">
                         <div class="card-header-flex">
-                            <h2><i class="fa-solid fa-clipboard-list"></i> جرد وتعديل كميات المخزن</h2>
+                            <h2><i class="fa-solid fa-clipboard-list"></i> جرد وتعديل كميات المخزن والتحكم بنشر المتجر</h2>
                             <button class="btn-success btn-table" onclick="exportTableToExcel('inventory-table', 'المخزن')"><i class="fa-solid fa-file-excel"></i> اسحب كـ Excel</button>
                         </div>
                         <input type="text" id="inventory-search" placeholder="ابحث بالاسم أو المجموعة..." onkeyup="filterInventoryTable()" style="margin-bottom:12px;">
                         <table id="inventory-table">
-                            <thead><tr><th>المجموعة</th><th>المنتج</th><th>المخزون</th><th>شراء المفرد</th><th>بيع المفرد</th><th>بيع الجملة</th><th class="admin-only">إجراء</th></tr></thead>
+                            <thead><tr><th>المجموعة</th><th>المنتج</th><th>المخزون</th><th>شراء المفرد</th><th>بيع المفرد</th><th>بيع الجملة</th><th>العرض بالمتجر 🌐</th><th class="admin-only">إجراء</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -552,7 +555,7 @@
             <div id="customize-tab" class="tab-content admin-only">
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px;">
                     <div class="card glass-panel">
-                        <h2><i class="fa-solid fa-folder-plus"></i> إضافة مجموعة (كروب)</h2>
+                        <h2><i class="fa-solid fa-folder-plus"></i> إضافة مجموعة (جروب)</h2>
                         <form id="group-form" style="margin-top:12px;"><div class="form-group"><input type="text" id="group-name" required placeholder="اسم المجموعة"></div><button type="submit" class="btn-primary" style="width:100%;"><i class="fa-solid fa-floppy-disk"></i> حفظ المجموعة</button></form>
                         <table id="groups-table"><thead><tr><th>المجموعة</th><th>إجراء</th></tr></thead><tbody></tbody></table>
                     </div>
@@ -1141,6 +1144,7 @@
         const type = document.getElementById('stock-type').value;
         const costPrice = parseFloat(document.getElementById('stock-cost-price').value);
         const sellPrice = parseFloat(document.getElementById('stock-sell-price').value);
+        const showInShop = document.getElementById('stock-show-in-shop').checked;
 
         if(!group || !name || isNaN(costPrice) || isNaN(sellPrice)) { alert("يرجى ملء جميع البيانات!"); return; }
 
@@ -1152,7 +1156,8 @@
             singleCost: (type === 'single') ? costPrice : (costPrice / piecesPerPack),
             singleSell: (type === 'single') ? sellPrice : (sellPrice / piecesPerPack),
             wholesaleSell: (type === 'wholesale') ? sellPrice : (sellPrice * piecesPerPack),
-            piecesPerPack
+            piecesPerPack,
+            showInShop
         });
 
         renderBatchTable();
@@ -1197,7 +1202,8 @@
                     qty: firebase.firestore.FieldValue.increment(item.qty),
                     singleCost: item.singleCost,
                     singleSell: item.singleSell,
-                    wholesaleSell: item.wholesaleSell
+                    wholesaleSell: item.wholesaleSell,
+                    showInShop: (item.showInShop !== undefined) ? item.showInShop : (existing.showInShop || false)
                 });
             } else {
                 const newRef = db.collection("inventory").doc();
@@ -1499,9 +1505,21 @@
             const isLow = p.qty <= 5;
             const isOut = p.qty <= 0;
             const stockBadge = isOut ? `<span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> نفذت</span>` : (isLow ? `<span class="badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i> ${p.qty} قطعة</span>` : `<span class="badge badge-success">${p.qty} قطعة</span>`);
+            
+            // زر التبديل والتحكم بنشر المادة في متجر الأونلاين
+            const isVisibleInShop = p.showInShop !== false;
+            const shopToggleBtn = isVisibleInShop 
+                ? `<button class="btn-success btn-table" onclick="toggleShopVisibility('${p.id}', false)"><i class="fa-solid fa-globe"></i> معروض بالمتجر</button>`
+                : `<button class="btn-secondary btn-table" onclick="toggleShopVisibility('${p.id}', true)"><i class="fa-solid fa-eye-slash"></i> مخفي من المتجر</button>`;
+
             const actions = (currentUserRole === 'admin') ? `<td><button class="btn-danger btn-table" onclick="deleteInventoryRow('${p.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td>` : `<td class="admin-only">-</td>`;
-            invBody.innerHTML += `<tr><td><span class="badge badge-gold">${escapeHTML(p.group)}</span></td><td><strong>${escapeHTML(p.name)}</strong></td><td>${stockBadge}</td><td>${(p.singleCost||0).toLocaleString()} د.ع</td><td>${(p.singleSell||0).toLocaleString()} د.ع</td><td>${(p.wholesaleSell||0).toLocaleString()} د.ع</td>${actions}</tr>`;
+            invBody.innerHTML += `<tr><td><span class="badge badge-gold">${escapeHTML(p.group)}</span></td><td><strong>${escapeHTML(p.name)}</strong></td><td>${stockBadge}</td><td>${(p.singleCost||0).toLocaleString()} د.ع</td><td>${(p.singleSell||0).toLocaleString()} د.ع</td><td>${(p.wholesaleSell||0).toLocaleString()} د.ع</td><td>${shopToggleBtn}</td>${actions}</tr>`;
         });
+    }
+
+    // دالة تغيير حالة العرض بالمتجر
+    function toggleShopVisibility(itemId, show) {
+        db.collection("inventory").doc(itemId).update({ showInShop: show });
     }
 
     function renderSalesTable() {
