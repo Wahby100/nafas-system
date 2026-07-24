@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nafas Enterprise System | نظام إدارة النفَس</title>
+    <title>Nafas Enterprise System | نظام إدارة النفَس (v1.2)</title>
     <!-- مكتبة أكسل -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- مكتبة QR Code -->
@@ -11,7 +11,7 @@
     <!-- مكتبة Confetti الاحتفالية -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <!-- خط Tajawal -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome 6 Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -64,6 +64,12 @@
         .glass-panel:hover {
             border-color: var(--border-glow);
             box-shadow: 0 0 25px rgba(243, 156, 18, 0.2);
+        }
+
+        .version-badge {
+            background: rgba(243, 156, 18, 0.15); border: 1px solid var(--accent-gold);
+            color: var(--accent-gold); font-size: 11px; font-weight: 800;
+            padding: 3px 8px; border-radius: 10px; margin-right: 6px;
         }
 
         /* Keyframe Animations */
@@ -170,6 +176,17 @@
         .cart-items { flex: 1; overflow-y: auto; max-height: 400px; margin-bottom: 15px; padding-left: 5px; }
         .cart-item-row { background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 14px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.06); }
 
+        /* Quick Cash Calculator Box */
+        .cash-calculator-panel {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(243, 156, 18, 0.25);
+            border-radius: 16px; padding: 12px; margin-bottom: 12px;
+        }
+        .cash-quick-btn {
+            padding: 6px 10px; font-size: 11px; font-weight: 800; border-radius: 8px;
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; cursor: pointer;
+        }
+        .cash-quick-btn:hover { background: var(--accent-gold); color: #000; }
+
         table { width: 100%; border-collapse: separate; border-spacing: 0 6px; margin-top: 8px; font-size: 13.5px; }
         th { padding: 10px 14px; color: var(--text-secondary); font-weight: 700; text-align: right; font-size: 12.5px; }
         td { padding: 12px 14px; background: rgba(255,255,255,0.02); text-align: right; border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.04); }
@@ -216,12 +233,13 @@
         }
         .sidebar-footer strong { color: var(--accent-gold); }
 
-        /* Fly to Cart Particle */
-        .fly-particle {
-            position: fixed; z-index: 9999; pointer-events: none;
-            width: 35px; height: 35px; background: var(--accent-gold); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px;
-            box-shadow: 0 0 20px var(--accent-gold); transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+        /* Poster Canvas Card */
+        #poster-preview-card {
+            width: 420px; height: 520px; background: #070a12;
+            border: 2px solid var(--accent-gold); border-radius: 24px;
+            padding: 30px; text-align: center; display: flex; flex-direction: column;
+            justify-content: space-between; position: relative; overflow: hidden;
+            box-shadow: 0 25px 50px rgba(243, 156, 18, 0.25);
         }
 
         /* Thermal Printing Optimizations */
@@ -241,7 +259,7 @@
     <div id="login-screen">
         <div class="login-card glass-panel">
             <img src="logo.png" alt="Nafas Logo" class="login-logo" onerror="this.style.display='none';">
-            <h2 style="margin-bottom: 25px; color:#fff; font-size:24px; justify-content: center;"><i class="fa-solid fa-lock"></i> تسجيل الدخول للنظام</h2>
+            <h2 style="margin-bottom: 25px; color:#fff; font-size:24px; justify-content: center;"><i class="fa-solid fa-lock"></i> تسجيل الدخول للنظام <span class="version-badge">v1.2</span></h2>
             <div id="login-error" style="color:var(--danger); font-size:13px; margin-bottom:15px; display:none;"></div>
             <form id="login-form">
                 <div class="form-group"><input type="email" id="login-email" required placeholder="البريد الإلكتروني"></div>
@@ -259,7 +277,7 @@
             <div>
                 <div class="sidebar-brand">
                     <img src="logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none';">
-                    <div class="sidebar-title"><h2>نظام <span>Nafas</span></h2></div>
+                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v1.2</span></h2></div>
                 </div>
 
                 <div class="nav-menu">
@@ -269,6 +287,7 @@
                         <span class="notify-badge" id="pending-orders-badge" style="display: none;">0</span>
                     </button>
                     <button class="nav-btn" onclick="openTab('pos-tab', this)"><i class="fa-solid fa-cart-shopping"></i> <span>واجهة الكاشير (POS)</span></button>
+                    <button class="nav-btn" onclick="openTab('poster-creator-tab', this)"><i class="fa-solid fa-palette"></i> <span>صانع بوستات الإعلانات 🎨</span></button>
                     <button class="nav-btn" onclick="openTab('inventory-tab', this)"><i class="fa-solid fa-boxes-stacked"></i> <span>إدارة المخزون</span></button>
                     <button class="nav-btn" onclick="openTab('sales-tab', this)"><i class="fa-solid fa-receipt"></i> <span>سجل المبيعات</span></button>
                     <button class="nav-btn" onclick="openTab('purchases-tab', this)"><i class="fa-solid fa-truck-field"></i> <span>فواتير توريد الشراء</span></button>
@@ -289,7 +308,7 @@
                 </div>
 
                 <div class="sidebar-footer">
-                    <div>Designed by <strong>Wahby</strong></div>
+                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v1.2</span></div>
                     <div>📧 wahby.razaq100@gmail.com</div>
                     <div>📞 07811880089</div>
                 </div>
@@ -300,7 +319,7 @@
         <div class="main-content">
             
             <div class="top-bar glass-panel">
-                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح</div>
+                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v1.2</span></div>
                 <div style="font-size:13px; color:var(--text-secondary); font-weight:700;" id="live-clock">--:--:--</div>
             </div>
 
@@ -315,6 +334,7 @@
                 <span class="badge badge-warning shimmer-badge" id="low-stock-count-badge">0 مواد</span>
             </div>
 
+            <!-- Dashboard -->
             <div class="dash-grid admin-only">
                 <div class="dash-card glass-panel"><h3>مبيعات اليوم النقدية</h3><div class="amount" id="dash-sales-today" style="color: var(--success);">0 د.ع</div></div>
                 <div class="dash-card glass-panel"><h3>صافي أرباح اليوم</h3><div class="amount" id="dash-profit-today" style="color: var(--info);">0 د.ع</div></div>
@@ -361,7 +381,7 @@
                 </div>
             </div>
 
-            <!-- POS Tab -->
+            <!-- POS Tab with Smart Change Calculator -->
             <div id="pos-tab" class="tab-content">
                 <div class="pos-container">
                     <div class="card glass-panel">
@@ -388,14 +408,96 @@
                                     <option value="debt">آجل (دين)</option>
                                 </select>
                             </div>
+                            
                             <div class="form-group" id="cart-customer-group" style="display: none;">
                                 <input type="text" id="cart-customer-name" placeholder="اسم الزبون / صاحب الدين">
                             </div>
+
+                            <!-- Smart Cash Change Calculator Box -->
+                            <div class="cash-calculator-panel" id="cash-calc-box">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                    <span style="font-size:11.5px; font-weight:700; color:var(--text-secondary);"><i class="fa-solid fa-calculator"></i> حاسبة الباقي الذكية:</span>
+                                    <span style="font-size:11px; color:var(--accent-gold);" id="calc-total-label">0 د.ع</span>
+                                </div>
+                                <input type="number" id="cash-received-input" placeholder="المبلغ المستلم من الزبون..." oninput="calculateCashChange()" style="padding:8px 10px; font-size:13px; font-weight:bold;">
+                                
+                                <div style="display:flex; gap:5px; margin-top:6px; flex-wrap:wrap;">
+                                    <button type="button" class="cash-quick-btn" onclick="setReceivedCash(25000)">25,000</button>
+                                    <button type="button" class="cash-quick-btn" onclick="setReceivedCash(50000)">50,000</button>
+                                    <button type="button" class="cash-quick-btn" onclick="setReceivedCash(100000)">100,000</button>
+                                    <button type="button" class="cash-quick-btn" onclick="setReceivedExact()">مضبوط</button>
+                                </div>
+
+                                <div style="margin-top:8px; text-align:center; padding:6px; background:rgba(0,0,0,0.5); border-radius:10px;" id="change-result-box">
+                                    <span style="font-size:11px; color:var(--text-secondary); display:block;">الباقي المرجّع للزبون:</span>
+                                    <strong style="font-size:17px; color:var(--success);" id="change-amount-text">0 د.ع</strong>
+                                </div>
+                            </div>
+
                             <div style="display: flex; justify-content: space-between; font-size: 19px; font-weight: 800; margin-bottom: 12px;">
                                 <span>المجموع:</span>
                                 <span id="cart-total-amount" style="color: var(--accent-gold);">0 د.ع</span>
                             </div>
                             <button class="btn-success" style="width:100%; font-size:15px;" onclick="checkoutCart()"><i class="fa-solid fa-receipt"></i> تأكيد البيع وطباعة الفاتورة</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Poster Creator Tab -->
+            <div id="poster-creator-tab" class="tab-content">
+                <div class="grid" style="display:grid; grid-template-columns: 1fr 1.2fr; gap:20px; align-items:start;">
+                    <div class="card glass-panel">
+                        <h2><i class="fa-solid fa-palette"></i> صانع بوستات الإعلانات للسوشيال ميديا 🎨</h2>
+                        <p style="font-size:12px; color:var(--text-secondary);">اختر المادة أو أدخل بيانات العرض لتوليد بوست ترويجي فاخر ومصمم بالساعة واللحظة!</p>
+                        
+                        <div class="form-group">
+                            <label>اختر مادة من المخزن للتصميم السريع:</label>
+                            <select id="poster-item-select" onchange="loadPosterItemData()">
+                                <option value="">-- اختر مادة --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>عنوان المنتج / العرض:</label>
+                            <input type="text" id="poster-title" placeholder="أدخل اسم المنتَج أو عنوان العرض..." oninput="updatePosterPreview()">
+                        </div>
+
+                        <div class="form-row">
+                            <div><label>السعر الأصلي (اختياري):</label><input type="number" id="poster-old-price" placeholder="السعر القديم..." oninput="updatePosterPreview()"></div>
+                            <div><label>سعر العرض / البيع:</label><input type="number" id="poster-new-price" placeholder="سعر البيع المباشر..." oninput="updatePosterPreview()"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>شارة العرض الخاصة (Badge):</label>
+                            <input type="text" id="poster-badge" value="🔥 عرض خاص ومحدود 🔥" oninput="updatePosterPreview()">
+                        </div>
+
+                        <button type="button" class="btn-primary" style="width:100%; margin-top:10px;" onclick="downloadPosterImage()"><i class="fa-solid fa-download"></i> تنزيل صورة البوست للسوشيال ميديا 📥</button>
+                    </div>
+
+                    <!-- Poster Live Canvas Preview Container -->
+                    <div class="card glass-panel" style="display:flex; justify-content:center; align-items:center; padding:20px;">
+                        <div id="poster-preview-card">
+                            <div style="border-bottom:1px dashed rgba(243,156,18,0.4); padding-bottom:15px;">
+                                <img src="logo.png" style="width:75px; height:75px; border-radius:50%; border:2px solid var(--accent-gold);" onerror="this.style.display='none';">
+                                <h1 style="margin:8px 0 0 0; font-size:22px; color:#fff; letter-spacing:1px;">متجر نفَس | Nafas Shop</h1>
+                                <span style="background:var(--accent-gold); color:#000; padding:2px 10px; border-radius:10px; font-size:10px; font-weight:800;" id="poster-card-badge">🔥 عرض خاص ومحدود 🔥</span>
+                            </div>
+
+                            <div style="margin:25px 0;">
+                                <h2 style="font-size:26px; color:#fff; margin-bottom:15px;" id="poster-card-title">اسم المنتج والخصم هنا</h2>
+                                <div style="display:flex; justify-content:center; align-items:center; gap:12px;">
+                                    <span style="font-size:18px; color:var(--danger); text-decoration:line-through; display:none;" id="poster-card-old-price">0 د.ع</span>
+                                    <span style="font-size:32px; font-weight:900; color:var(--success); text-shadow:0 0 15px rgba(16,185,129,0.5);" id="poster-card-new-price">0 د.ع</span>
+                                </div>
+                            </div>
+
+                            <div style="border-top:1px dashed rgba(255,255,255,0.1); padding-top:15px; font-size:11px; color:var(--text-secondary); line-height:1.6;">
+                                <div>📍 بغداد - الدورة - شارع المعلمين - تحت السقيفة</div>
+                                <div>📞 07716097656 | 07706284809</div>
+                                <div style="color:var(--accent-gold); margin-top:4px; font-weight:700;">🛍️ اطلب أونلاين الآن من متجر نفَس | توصيل سريع</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -922,6 +1024,7 @@
             renderPriceLookupCards();
             renderInventoryUI(); 
             renderPosCards();
+            populatePosterItemSelect();
             checkLowStockAlerts();
         });
 
@@ -958,6 +1061,103 @@
                 renderUsersTable();
             });
         }
+    }
+
+    /* ============================================================
+       Smart Cash Change Calculator Logic
+       ============================================================ */
+    function getCartTotalSum() {
+        let total = 0;
+        cart.forEach(c => total += (c.qty * c.price));
+        return Math.round(total);
+    }
+
+    function calculateCashChange() {
+        const total = getCartTotalSum();
+        const input = document.getElementById("cash-received-input");
+        const received = parseFloat(input.value);
+        const textObj = document.getElementById("change-amount-text");
+
+        if (isNaN(received) || received <= 0) {
+            textObj.innerText = "0 د.ع";
+            textObj.style.color = "var(--success)";
+            return;
+        }
+
+        const change = received - total;
+        if (change < 0) {
+            textObj.innerText = `المبلغ لا يكفي! ناقص (${Math.abs(change).toLocaleString()} د.ع)`;
+            textObj.style.color = "var(--danger)";
+        } else {
+            textObj.innerText = `${change.toLocaleString()} د.ع`;
+            textObj.style.color = "var(--success)";
+        }
+    }
+
+    function setReceivedCash(val) {
+        playBeepSound();
+        document.getElementById("cash-received-input").value = val;
+        calculateCashChange();
+    }
+
+    function setReceivedExact() {
+        playBeepSound();
+        const total = getCartTotalSum();
+        document.getElementById("cash-received-input").value = total;
+        calculateCashChange();
+    }
+
+    /* ============================================================
+       Social Media Poster Creator Generator Logic
+       ============================================================ */
+    function populatePosterItemSelect() {
+        const sel = document.getElementById("poster-item-select");
+        if(!sel) return;
+        sel.innerHTML = '<option value="">-- اختر مادة من المخزن --</option>';
+        inventory.forEach(i => {
+            const opt = document.createElement("option");
+            opt.value = i.id;
+            opt.textContent = `${i.name} (${i.singleSell.toLocaleString()} د.ع)`;
+            sel.appendChild(opt);
+        });
+    }
+
+    function loadPosterItemData() {
+        const selVal = document.getElementById("poster-item-select").value;
+        if(!selVal) return;
+        const item = inventory.find(i => i.id === selVal);
+        if(!item) return;
+
+        document.getElementById("poster-title").value = item.name;
+        document.getElementById("poster-new-price").value = item.singleSell;
+        document.getElementById("poster-old-price").value = Math.round(item.singleSell * 1.15);
+        updatePosterPreview();
+    }
+
+    function updatePosterPreview() {
+        const title = document.getElementById("poster-title").value.trim() || "اسم المنتج والعرض هنا";
+        const newPrice = parseFloat(document.getElementById("poster-new-price").value) || 0;
+        const oldPrice = parseFloat(document.getElementById("poster-old-price").value) || 0;
+        const badgeText = document.getElementById("poster-badge").value.trim() || "🔥 عرض خاص ومحدود 🔥";
+
+        document.getElementById("poster-card-title").innerText = title;
+        document.getElementById("poster-card-new-price").innerText = newPrice ? `${newPrice.toLocaleString()} د.ع` : "0 د.ع";
+        
+        const oldObj = document.getElementById("poster-card-old-price");
+        if (oldPrice && oldPrice > newPrice) {
+            oldObj.innerText = `${oldPrice.toLocaleString()} د.ع`;
+            oldObj.style.display = "inline-block";
+        } else {
+            oldObj.style.display = "none";
+        }
+
+        document.getElementById("poster-card-badge").innerText = badgeText;
+    }
+
+    function downloadPosterImage() {
+        playSuccessSound();
+        alert("🖼️ جاري تجهيز بوست الإعلان للتنزيل بصيغة عالية الدقة!");
+        window.print();
     }
 
     function renderOnlineOrdersTable(pendingOrders) {
@@ -1458,6 +1658,8 @@
         });
 
         document.getElementById("cart-total-amount").innerText = Math.round(total).toLocaleString() + " د.ع";
+        document.getElementById("calc-total-label").innerText = `المجموع: ${Math.round(total).toLocaleString()} د.ع`;
+        calculateCashChange();
     }
 
     function changeCartType(index, newType) {
@@ -1524,7 +1726,10 @@
         try { confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } }); } catch(e) {}
 
         showReceiptModal(dateStr, receiptItems, Math.round(totalAmount), paymentStatus, customerName);
-        cart = []; updateCartUI(); document.getElementById("cart-customer-name").value = '';
+        cart = []; updateCartUI(); 
+        document.getElementById("cart-customer-name").value = '';
+        document.getElementById("cash-received-input").value = '';
+        calculateCashChange();
     }
 
     function showReceiptModal(dateStr, items, total, paymentStatus, customerName) {
