@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nafas Enterprise System | نظام إدارة النفَس (v1.4)</title>
+    <title>Nafas Enterprise System | نظام إدارة النفَس </title>
     <!-- مكتبة أكسل -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- مكتبة QR Code -->
@@ -257,9 +257,9 @@
 
         /* Poster Canvas Card */
         #poster-preview-card {
-            width: 420px; height: 520px; background: #070a12;
+            width: 420px; min-height: 520px; background: #070a12;
             border: 2px solid var(--accent-gold); border-radius: 24px;
-            padding: 30px; text-align: center; display: flex; flex-direction: column;
+            padding: 26px 22px; text-align: center; display: flex; flex-direction: column;
             justify-content: space-between; position: relative; overflow: hidden;
             box-shadow: 0 25px 50px rgba(243, 156, 18, 0.25);
         }
@@ -285,7 +285,7 @@
         <div class="login-card glass-panel">
             <img src="logo.png" alt="Nafas Logo" class="login-logo" onerror="this.style.display='none';">
             <h1 style="color: #fff; font-size: 24px; margin-bottom: 5px; font-weight: 800;">نظام نفَس | Nafas System</h1>
-            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 25px;">قم بتسجيل الدخول للوصول للكاشير والإدارة <span class="version-badge">v1.4</span></p>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 25px;">قم بتسجيل الدخول للوصول للكاشير والإدارة <span class="version-badge">v1.6</span></p>
             
             <form id="login-form">
                 <div class="form-group" style="text-align: right;">
@@ -310,7 +310,7 @@
             <div>
                 <div class="sidebar-brand">
                     <img src="logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none';">
-                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v1.4</span></h2></div>
+                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v1.6</span></h2></div>
                 </div>
 
                 <div class="nav-menu">
@@ -341,7 +341,7 @@
                 </div>
 
                 <div class="sidebar-footer">
-                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v1.4</span></div>
+                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v1.6</span></div>
                     <div>📧 wahby.razaq100@gmail.com</div>
                     <div>📞 07811880089</div>
                 </div>
@@ -352,7 +352,7 @@
         <div class="main-content">
             
             <div class="top-bar glass-panel">
-                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v1.4</span></div>
+                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v1.6</span></div>
                 <div style="font-size:13px; color:var(--text-secondary); font-weight:700;" id="live-clock">--:--:--</div>
             </div>
 
@@ -496,6 +496,11 @@
                             <input type="text" id="poster-title" placeholder="أدخل اسم المنتَج أو عنوان العرض..." oninput="updatePosterPreview()">
                         </div>
 
+                        <div class="form-group">
+                            <label>صورة المنتج للبوست (اختياري / أو يتم جلبها تلقائياً):</label>
+                            <input type="url" id="poster-image-url" placeholder="ضع رابط صورة أو سيتم استخدام صورة المنتج المحددة..." oninput="updatePosterPreview()">
+                        </div>
+
                         <div class="form-row">
                             <div><label>السعر الأصلي (اختياري):</label><input type="number" id="poster-old-price" placeholder="السعر القديم..." oninput="updatePosterPreview()"></div>
                             <div><label>سعر العرض / البيع:</label><input type="number" id="poster-new-price" placeholder="سعر البيع المباشر..." oninput="updatePosterPreview()"></div>
@@ -512,21 +517,26 @@
                     <!-- Poster Live Canvas Preview Container -->
                     <div class="card glass-panel" style="display:flex; justify-content:center; align-items:center; padding:20px;">
                         <div id="poster-preview-card">
-                            <div style="border-bottom:1px dashed rgba(243,156,18,0.4); padding-bottom:15px;">
-                                <img src="logo.png" style="width:75px; height:75px; border-radius:50%; border:2px solid var(--accent-gold);" onerror="this.style.display='none';">
-                                <h1 style="margin:8px 0 0 0; font-size:22px; color:#fff; letter-spacing:1px;">متجر نفَس | Nafas Shop</h1>
+                            <div style="border-bottom:1px dashed rgba(243,156,18,0.4); padding-bottom:12px;">
+                                <img src="logo.png" style="width:65px; height:65px; border-radius:50%; border:2px solid var(--accent-gold);" onerror="this.style.display='none';">
+                                <h1 style="margin:6px 0 0 0; font-size:20px; color:#fff; letter-spacing:1px;">متجر نفَس | Nafas Shop</h1>
                                 <span style="background:var(--accent-gold); color:#000; padding:2px 10px; border-radius:10px; font-size:10px; font-weight:800;" id="poster-card-badge">🔥 عرض خاص ومحدود 🔥</span>
                             </div>
 
-                            <div style="margin:25px 0;">
-                                <h2 style="font-size:26px; color:#fff; margin-bottom:15px;" id="poster-card-title">اسم المنتج والخصم هنا</h2>
+                            <!-- Product Image inside Poster Preview -->
+                            <div id="poster-img-box" style="display:none; margin:14px 0 6px 0;">
+                                <img id="poster-card-img" src="" style="width:100%; max-height:160px; border-radius:16px; object-fit:contain; background:rgba(0,0,0,0.5); padding:4px; border:1px solid var(--accent-gold); box-shadow:0 8px 20px rgba(0,0,0,0.6);">
+                            </div>
+
+                            <div style="margin:15px 0;">
+                                <h2 style="font-size:24px; color:#fff; margin-bottom:10px;" id="poster-card-title">اسم المنتج والخصم هنا</h2>
                                 <div style="display:flex; justify-content:center; align-items:center; gap:12px;">
-                                    <span style="font-size:18px; color:var(--danger); text-decoration:line-through; display:none;" id="poster-card-old-price">0 د.ع</span>
-                                    <span style="font-size:32px; font-weight:900; color:var(--success); text-shadow:0 0 15px rgba(16,185,129,0.5);" id="poster-card-new-price">0 د.ع</span>
+                                    <span style="font-size:17px; color:var(--danger); text-decoration:line-through; display:none;" id="poster-card-old-price">0 د.ع</span>
+                                    <span style="font-size:28px; font-weight:900; color:var(--success); text-shadow:0 0 15px rgba(16,185,129,0.5);" id="poster-card-new-price">0 د.ع</span>
                                 </div>
                             </div>
 
-                            <div style="border-top:1px dashed rgba(255,255,255,0.1); padding-top:15px; font-size:11px; color:var(--text-secondary); line-height:1.6;">
+                            <div style="border-top:1px dashed rgba(255,255,255,0.1); padding-top:12px; font-size:11px; color:var(--text-secondary); line-height:1.5;">
                                 <div>📍 بغداد - الدورة - شارع المعلمين - تحت السقيفة</div>
                                 <div>📞 07716097656 | 07706284809</div>
                                 <div style="color:var(--accent-gold); margin-top:4px; font-weight:700;">🛍️ اطلب أونلاين الآن من متجر نفَس | توصيل سريع</div>
@@ -1250,7 +1260,7 @@
     }
 
     /* ============================================================
-       Social Media Poster Creator Generator Logic
+       Social Media Poster Creator Generator Logic (v1.6 with Image Support)
        ============================================================ */
     function populatePosterItemSelect() {
         const sel = document.getElementById("poster-item-select");
@@ -1273,6 +1283,7 @@
         document.getElementById("poster-title").value = item.name;
         document.getElementById("poster-new-price").value = item.singleSell;
         document.getElementById("poster-old-price").value = Math.round(item.singleSell * 1.15);
+        document.getElementById("poster-image-url").value = item.imageUrl || '';
         updatePosterPreview();
     }
 
@@ -1281,6 +1292,7 @@
         const newPrice = parseFloat(document.getElementById("poster-new-price").value) || 0;
         const oldPrice = parseFloat(document.getElementById("poster-old-price").value) || 0;
         const badgeText = document.getElementById("poster-badge").value.trim() || "🔥 عرض خاص ومحدود 🔥";
+        const imageUrl = document.getElementById("poster-image-url").value.trim();
 
         document.getElementById("poster-card-title").innerText = title;
         document.getElementById("poster-card-new-price").innerText = newPrice ? `${newPrice.toLocaleString()} د.ع` : "0 د.ع";
@@ -1294,6 +1306,16 @@
         }
 
         document.getElementById("poster-card-badge").innerText = badgeText;
+
+        const imgBox = document.getElementById("poster-img-box");
+        const imgTag = document.getElementById("poster-card-img");
+
+        if (imageUrl) {
+            imgTag.src = imageUrl;
+            imgBox.style.display = "block";
+        } else {
+            imgBox.style.display = "none";
+        }
     }
 
     function downloadPosterImage() {
@@ -1483,7 +1505,7 @@
             const badgeClass = isOut ? 'badge-danger' : (isLow ? 'badge-warning' : 'badge-success');
             const statusText = isOut ? '<i class="fa-solid fa-xmark"></i> نفذت' : (isLow ? `<i class="fa-solid fa-triangle-exclamation"></i> قارب على النفاد (${item.qty} ${isKg?'كجم':'قطع'})` : `${item.qty} ${isKg?'كجم':'قطع'}`);
 
-            const imageThumbHTML = item.imageUrl ? `<img src="${escapeHTML(item.imageUrl)}" style="width:45px; height:45px; border-radius:10px; object-fit:cover; border:1px solid var(--accent-gold);">` : '';
+            const imageThumbHTML = item.imageUrl ? `<img src="${escapeHTML(item.imageUrl)}" style="width:50px; height:50px; border-radius:10px; object-fit:contain; background:rgba(0,0,0,0.4); border:1px solid var(--accent-gold);">` : '';
 
             container.innerHTML += `
                 <div class="price-item-card">
@@ -1532,7 +1554,7 @@
             if(filterGroup && item.group !== filterGroup) return;
             const isKg = item.unitType === 'kg';
             const isLow = item.qty <= 5;
-            const imgHTML = item.imageUrl ? `<img src="${escapeHTML(item.imageUrl)}" style="width:50px; height:50px; border-radius:12px; object-fit:cover; margin:0 auto 6px auto; border:1px solid var(--accent-gold);">` : '';
+            const imgHTML = item.imageUrl ? `<img src="${escapeHTML(item.imageUrl)}" style="width:100%; height:85px; border-radius:12px; object-fit:contain; background:rgba(0,0,0,0.4); margin:0 auto 6px auto; border:1px solid var(--accent-gold);">` : '';
 
             pBox.innerHTML += `
                 <div class="pos-card" id="pos-card-${item.id}" onclick="triggerFlyToCart(event, '${item.id}'); addToCart('${item.id}')">
@@ -1999,7 +2021,7 @@
                 ? `<button class="btn-success btn-table" onclick="toggleShopVisibility('${p.id}', false)"><i class="fa-solid fa-globe"></i> معروض بالمتجر</button>`
                 : `<button class="btn-secondary btn-table" onclick="toggleShopVisibility('${p.id}', true)"><i class="fa-solid fa-eye-slash"></i> مخفي من المتجر</button>`;
 
-            const imageColHTML = p.imageUrl ? `<img src="${escapeHTML(p.imageUrl)}" style="width:36px; height:36px; border-radius:8px; object-fit:cover; border:1px solid var(--accent-gold);">` : '<span style="color:var(--text-secondary); font-size:11px;">بدون صورة</span>';
+            const imageColHTML = p.imageUrl ? `<img src="${escapeHTML(p.imageUrl)}" style="width:38px; height:38px; border-radius:8px; object-fit:contain; background:rgba(0,0,0,0.4); border:1px solid var(--accent-gold);">` : '<span style="color:var(--text-secondary); font-size:11px;">بدون صورة</span>';
 
             const actions = (currentUserRole === 'admin') ? `<td><button class="btn-danger btn-table" onclick="deleteInventoryRow('${p.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td>` : `<td class="admin-only">-</td>`;
             invBody.innerHTML += `<tr><td>${imageColHTML}</td><td><span class="badge badge-gold">${escapeHTML(p.group)}</span></td><td><strong>${escapeHTML(p.name)}</strong></td><td>${unitLabel}</td><td>${stockBadge}</td><td>${(p.singleCost||0).toLocaleString()} د.ع</td><td>${(p.singleSell||0).toLocaleString()} د.ع</td><td>${isKg ? '-' : (p.wholesaleSell||0).toLocaleString() + ' د.ع'}</td><td>${shopToggleBtn}</td>${actions}</tr>`;
