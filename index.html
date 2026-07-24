@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nafas Enterprise System | نظام إدارة النفَس (v1.2)</title>
+    <title>Nafas Enterprise System | نظام إدارة النفَس (v1.3)</title>
     <!-- مكتبة أكسل -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- مكتبة QR Code -->
@@ -48,7 +48,18 @@
                 radial-gradient(at 0% 0%, rgba(243, 156, 18, 0.12) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(0, 242, 254, 0.08) 0px, transparent 50%);
             margin: 0; padding: 0; color: var(--text-primary);
-            display: flex; height: 100vh; overflow: hidden;
+            display: flex; height: 100vh; overflow: hidden; position: relative;
+        }
+
+        /* Animated Particles Canvas */
+        #particles-canvas {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+        }
+
+        .version-badge {
+            background: rgba(243, 156, 18, 0.15); border: 1px solid var(--accent-gold);
+            color: var(--accent-gold); font-size: 11px; font-weight: 800;
+            padding: 3px 8px; border-radius: 10px; margin-right: 6px;
         }
 
         /* Glassmorphism Classes */
@@ -66,17 +77,16 @@
             box-shadow: 0 0 25px rgba(243, 156, 18, 0.2);
         }
 
-        .version-badge {
-            background: rgba(243, 156, 18, 0.15); border: 1px solid var(--accent-gold);
-            color: var(--accent-gold); font-size: 11px; font-weight: 800;
-            padding: 3px 8px; border-radius: 10px; margin-right: 6px;
-        }
-
         /* Keyframe Animations */
         @keyframes pulseGlow {
             0% { box-shadow: 0 0 10px rgba(243, 156, 18, 0.3); }
             50% { box-shadow: 0 0 25px rgba(243, 156, 18, 0.7); }
             100% { box-shadow: 0 0 10px rgba(243, 156, 18, 0.3); }
+        }
+
+        @keyframes floatReceipt {
+            0%, 100% { transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateY(0); }
+            50% { transform: perspective(1000px) rotateX(4deg) rotateY(-4deg) translateY(-8px); }
         }
 
         @keyframes shimmer {
@@ -97,7 +107,7 @@
         }
         .login-logo { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--accent-gold); margin-bottom: 20px; animation: pulseGlow 3s infinite; }
 
-        .app-layout { display: flex; width: 100%; height: 100%; }
+        .app-layout { display: flex; width: 100%; height: 100%; position: relative; z-index: 1; }
         
         .sidebar {
             width: 280px; background: rgba(11, 15, 25, 0.95); backdrop-filter: blur(25px);
@@ -158,14 +168,17 @@
         .price-row-detail { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.06); }
         .price-row-detail:last-child { border-bottom: none; }
 
-        .pos-container { display: grid; grid-template-columns: 2.2fr 1.2fr; gap: 20px; }
+        .pos-container { display: grid; grid-template-columns: 2.2fr 1.2fr; gap: 20px; perspective: 1000px; }
         .pos-items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+        
+        /* 3D Holographic Tilt POS Card */
         .pos-card {
             background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);
             border-radius: 18px; padding: 16px 12px; text-align: center; cursor: pointer;
             display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;
+            transform-style: preserve-3d; transition: transform 0.15s ease-out, border-color 0.3s ease;
         }
-        .pos-card:hover { transform: translateY(-4px) scale(1.03); border-color: var(--accent-gold); background: var(--bg-card-hover); box-shadow: 0 12px 30px rgba(243, 156, 18, 0.25); }
+        .pos-card:hover { border-color: var(--accent-gold); background: var(--bg-card-hover); box-shadow: 0 15px 35px rgba(243, 156, 18, 0.3); }
         .pos-card h4 { margin: 8px 0 5px 0; font-size: 14px; font-weight: 700; color: #fff; }
         .pos-card .price { font-size: 13px; font-weight: 800; color: var(--success); }
 
@@ -226,7 +239,16 @@
         .tab-content.active { display: block; }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 1000; display: none; justify-content: center; align-items: center; }
-        .receipt-card { background: #fff; color: #1e293b; width: 350px; padding: 25px; border-radius: 16px; font-family: 'Tajawal', sans-serif; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+        
+        /* 3D Floating Glass Receipt Preview */
+        .receipt-card { 
+            background: #ffffff; color: #1e293b; width: 360px; padding: 25px; 
+            border-radius: 20px; font-family: 'Tajawal', sans-serif; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 30px rgba(243,156,18,0.4);
+            border: 2px solid var(--accent-gold);
+            animation: floatReceipt 4s ease-in-out infinite;
+            transform-style: preserve-3d;
+        }
 
         .sidebar-footer {
             padding: 10px; font-size: 11px; color: var(--text-secondary); text-align: center; border-top: 1px solid rgba(255,255,255,0.06); line-height: 1.5;
@@ -248,26 +270,15 @@
             #receipt-modal, #receipt-modal *, #print-online-invoice-modal, #print-online-invoice-modal *, #purchase-invoice-modal, #purchase-invoice-modal * { visibility: visible; }
             #receipt-modal, #print-online-invoice-modal, #purchase-invoice-modal { position: absolute; left: 0; top: 0; width: 100%; background: #fff; }
             .no-print { display: none !important; }
-            .receipt-card { width: 80mm; max-width: 100%; border-radius: 0; box-shadow: none; padding: 5mm; color: #000; font-size: 11px; }
+            .receipt-card { width: 80mm; max-width: 100%; border-radius: 0; box-shadow: none; padding: 5mm; color: #000; font-size: 11px; border: none; animation: none; transform: none; }
             @page { size: 80mm auto; margin: 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Login Screen -->
-    <div id="login-screen">
-        <div class="login-card glass-panel">
-            <img src="logo.png" alt="Nafas Logo" class="login-logo" onerror="this.style.display='none';">
-            <h2 style="margin-bottom: 25px; color:#fff; font-size:24px; justify-content: center;"><i class="fa-solid fa-lock"></i> تسجيل الدخول للنظام <span class="version-badge">v1.2</span></h2>
-            <div id="login-error" style="color:var(--danger); font-size:13px; margin-bottom:15px; display:none;"></div>
-            <form id="login-form">
-                <div class="form-group"><input type="email" id="login-email" required placeholder="البريد الإلكتروني"></div>
-                <div class="form-group"><input type="password" id="login-password" required placeholder="كلمة المرور"></div>
-                <button type="submit" class="btn-primary" id="login-btn" style="width:100%; margin-top:10px;"><i class="fa-solid fa-right-to-bracket"></i> دخول للنظام</button>
-            </form>
-        </div>
-    </div>
+    <!-- Animated Dust Particles Canvas Background -->
+    <canvas id="particles-canvas"></canvas>
 
     <!-- Main Layout -->
     <div class="app-layout" id="main-app" style="display: none;">
@@ -277,7 +288,7 @@
             <div>
                 <div class="sidebar-brand">
                     <img src="logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none';">
-                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v1.2</span></h2></div>
+                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v1.3</span></h2></div>
                 </div>
 
                 <div class="nav-menu">
@@ -308,7 +319,7 @@
                 </div>
 
                 <div class="sidebar-footer">
-                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v1.2</span></div>
+                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v1.3</span></div>
                     <div>📧 wahby.razaq100@gmail.com</div>
                     <div>📞 07811880089</div>
                 </div>
@@ -319,7 +330,7 @@
         <div class="main-content">
             
             <div class="top-bar glass-panel">
-                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v1.2</span></div>
+                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v1.3</span></div>
                 <div style="font-size:13px; color:var(--text-secondary); font-weight:700;" id="live-clock">--:--:--</div>
             </div>
 
@@ -712,7 +723,7 @@
         </div>
     </div>
 
-    <!-- Receipt Modal -->
+    <!-- 3D Floating Glass Receipt Modal -->
     <div class="modal-overlay" id="receipt-modal">
         <div>
             <div class="receipt-card" id="receipt-modal-card">
@@ -856,6 +867,89 @@
     </div>
 
 <script>
+    /* ============================================================
+       Interactive Animated Dust Particles Canvas Background
+       ============================================================ */
+    const canvas = document.getElementById("particles-canvas");
+    const ctx = canvas.getContext("2d");
+    let particlesArray = [];
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2.2 + 0.5;
+            this.speedX = (Math.random() - 0.5) * 0.35;
+            this.speedY = (Math.random() - 0.5) * 0.35;
+            this.alpha = Math.random() * 0.5 + 0.2;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+        }
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.fillStyle = "#f39c12";
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    function initParticles() {
+        particlesArray = [];
+        const count = Math.min(Math.floor(window.innerWidth / 22), 40);
+        for (let i = 0; i < count; i++) {
+            particlesArray.push(new Particle());
+        }
+    }
+    initParticles();
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particlesArray.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    /* ============================================================
+       3D Holographic Tilt Cards Mouse Event Handlers
+       ============================================================ */
+    function apply3DTiltToPosCards() {
+        document.querySelectorAll('.pos-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = ((y - centerY) / centerY) * -12;
+                const rotateY = ((x - centerX) / centerX) * 12;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.04)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+            });
+        });
+    }
+
     /* ============================================================
        Interactive Web Audio API Sound System for POS
        ============================================================ */
@@ -1401,6 +1495,8 @@
                 </div>
             `;
         });
+
+        apply3DTiltToPosCards();
     }
 
     function triggerFlyToCart(e, itemId) {
