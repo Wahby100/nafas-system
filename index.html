@@ -488,6 +488,15 @@
                         <p style="font-size:12px; color:var(--text-secondary);">اختر المادة أو أدخل بيانات العرض لتوليد بوست ترويجي فاخر ومصمم بنمط Instagram Story 9:16!</p>
                         
                         <div class="form-group">
+                            <label>اختر قالب / ثيم الستوري (Global Story Studio):</label>
+                            <select id="poster-theme-select" onchange="updatePosterTheme()">
+                                <option value="royal">👑 1. الثيم الذهبي والأسود الملكي (Royal Obsidian)</option>
+                                <option value="ember">🔥 2. ثيم النار والدخان المشتعل (Neon Ember Smoke)</option>
+                                <option value="modern">💎 3. ثيم الفخامة المودرن (Modern Minimalist)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label>اختر مادة من المخزن للتصميم السريع:</label>
                             <select id="poster-item-select" onchange="loadPosterItemData()">
                                 <option value="">-- اختر مادة --</option>
@@ -2300,6 +2309,33 @@
     }
 
     function deleteUserRow(id) { if(confirm('حذف صلاحية هذا الحساب؟')) { playRemoveSound(); db.collection("users").doc(id).delete(); } }
+
+    /* Global Story Studio Theme Switcher */
+    function updatePosterTheme() {
+        const theme = document.getElementById("poster-theme-select").value;
+        const card = document.getElementById("poster-preview-card");
+        if (!card) return;
+
+        if (theme === 'royal') {
+            card.style.background = "linear-gradient(145deg, #0b0f19 0%, #171f30 100%)";
+            card.style.border = "3px solid #f39c12";
+            document.getElementById("poster-brand-title").style.color = "#ffffff";
+            document.getElementById("poster-card-badge").style.background = "#f39c12";
+            document.getElementById("poster-card-badge").style.color = "#000000";
+        } else if (theme === 'ember') {
+            card.style.background = "linear-gradient(145deg, #180805 0%, #2e0d06 100%)";
+            card.style.border = "3px solid #ff5722";
+            document.getElementById("poster-brand-title").style.color = "#ffddcc";
+            document.getElementById("poster-card-badge").style.background = "#ff5722";
+            document.getElementById("poster-card-badge").style.color = "#ffffff";
+        } else if (theme === 'modern') {
+            card.style.background = "linear-gradient(145deg, #0a1120 0%, #030712 100%)";
+            card.style.border = "3px solid #00f2fe";
+            document.getElementById("poster-brand-title").style.color = "#00f2fe";
+            document.getElementById("poster-card-badge").style.background = "#00f2fe";
+            document.getElementById("poster-card-badge").style.color = "#000000";
+        }
+    }
 </script>
 </body>
 </html>
