@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nafas Enterprise System | نظام إدارة النفَس (v1.3)</title>
+    <title>Nafas Enterprise System | نظام إدارة النفَس (v1.4)</title>
     <!-- مكتبة أكسل -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- مكتبة QR Code -->
@@ -280,6 +280,28 @@
     <!-- Animated Dust Particles Canvas Background -->
     <canvas id="particles-canvas"></canvas>
 
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-card glass-panel">
+            <img src="logo.png" alt="Nafas Logo" class="login-logo" onerror="this.style.display='none';">
+            <h1 style="color: #fff; font-size: 24px; margin-bottom: 5px; font-weight: 800;">نظام نفَس | Nafas System</h1>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 25px;">قم بتسجيل الدخول للوصول للكاشير والإدارة <span class="version-badge">v1.4</span></p>
+            
+            <form id="login-form">
+                <div class="form-group" style="text-align: right;">
+                    <label>البريد الإلكتروني:</label>
+                    <input type="email" id="login-email" required placeholder="admin@nafas.com">
+                </div>
+                <div class="form-group" style="text-align: right; margin-bottom: 20px;">
+                    <label>كلمة المرور:</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <div id="login-error" style="color: var(--danger); font-size: 12px; margin-bottom: 12px; display: none;"></div>
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; font-size: 15px;"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Main Layout -->
     <div class="app-layout" id="main-app" style="display: none;">
         
@@ -288,7 +310,7 @@
             <div>
                 <div class="sidebar-brand">
                     <img src="logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none';">
-                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v1.3</span></h2></div>
+                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v1.4</span></h2></div>
                 </div>
 
                 <div class="nav-menu">
@@ -299,7 +321,7 @@
                     </button>
                     <button class="nav-btn" onclick="openTab('pos-tab', this)"><i class="fa-solid fa-cart-shopping"></i> <span>واجهة الكاشير (POS)</span></button>
                     <button class="nav-btn" onclick="openTab('poster-creator-tab', this)"><i class="fa-solid fa-palette"></i> <span>صانع بوستات الإعلانات 🎨</span></button>
-                    <button class="nav-btn" onclick="openTab('inventory-tab', this)"><i class="fa-solid fa-boxes-stacked"></i> <span>إدارة المخزون</span></button>
+                    <button class="nav-btn" onclick="openTab('inventory-tab', this)"><i class="fa-solid fa-boxes-stacked"></i> <span>إدارة المخزون والصور 🖼️</span></button>
                     <button class="nav-btn" onclick="openTab('sales-tab', this)"><i class="fa-solid fa-receipt"></i> <span>سجل المبيعات</span></button>
                     <button class="nav-btn" onclick="openTab('purchases-tab', this)"><i class="fa-solid fa-truck-field"></i> <span>فواتير توريد الشراء</span></button>
                     <button class="nav-btn" onclick="openTab('debts-tab', this)"><i class="fa-solid fa-book-bookmark"></i> <span>سجل الديون</span></button>
@@ -319,7 +341,7 @@
                 </div>
 
                 <div class="sidebar-footer">
-                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v1.3</span></div>
+                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v1.4</span></div>
                     <div>📧 wahby.razaq100@gmail.com</div>
                     <div>📞 07811880089</div>
                 </div>
@@ -330,7 +352,7 @@
         <div class="main-content">
             
             <div class="top-bar glass-panel">
-                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v1.3</span></div>
+                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v1.4</span></div>
                 <div style="font-size:13px; color:var(--text-secondary); font-weight:700;" id="live-clock">--:--:--</div>
             </div>
 
@@ -514,15 +536,21 @@
                 </div>
             </div>
 
-            <!-- Inventory Tab -->
+            <!-- Inventory Tab with Direct Image Upload Support -->
             <div id="inventory-tab" class="tab-content">
                 <div class="grid" style="display:grid; grid-template-columns: 1fr 2fr; gap:18px;">
                     <div class="card glass-panel admin-only">
-                        <h2><i class="fa-solid fa-truck-ramp-box"></i> توريد شحنة جديدة للمخزن</h2>
+                        <h2><i class="fa-solid fa-truck-ramp-box"></i> توريد شحنة جديدة للمخزن وإضافة الصور 🖼️</h2>
                         <form id="quick-entry-form" style="margin-top:12px;">
                             <div class="form-group"><label>المجموعة:</label><select id="stock-group-filter" onchange="filterStockItems()" required></select></div>
                             <div class="form-group"><label>المادة:</label><select id="stock-item-select" required disabled></select></div>
                             
+                            <div class="form-group">
+                                <label>رابط صورة المنتج (أو اختر ملف صورة من جهازك):</label>
+                                <input type="url" id="stock-image-url" placeholder="ضع رابط الصورة هنا أو اختر ملفاً...">
+                                <input type="file" id="stock-image-file" accept="image/*" onchange="handleImageFileUpload(event)" style="margin-top:6px; font-size:11px; padding:6px;">
+                            </div>
+
                             <div class="form-row">
                                 <div>
                                     <label>وحدة البيع:</label>
@@ -567,12 +595,12 @@
 
                     <div class="card glass-panel" style="grid-column: span 2;">
                         <div class="card-header-flex">
-                            <h2><i class="fa-solid fa-clipboard-list"></i> جرد وتعديل كميات المخزن والتحكم بنشر المتجر</h2>
+                            <h2><i class="fa-solid fa-clipboard-list"></i> جرد وتعديل كميات المخزن وروابط الصور</h2>
                             <button class="btn-success btn-table" onclick="exportTableToExcel('inventory-table', 'المخزن')"><i class="fa-solid fa-file-excel"></i> اسحب كـ Excel</button>
                         </div>
                         <input type="text" id="inventory-search" placeholder="ابحث بالاسم أو المجموعة..." onkeyup="filterInventoryTable()" style="margin-bottom:12px;">
                         <table id="inventory-table">
-                            <thead><tr><th>المجموعة</th><th>المنتج</th><th>وحدة البيع</th><th>المخزون المتوفر</th><th>الشراء (التكلفة)</th><th>بيع المفرد/الكيلو</th><th>بيع الجملة</th><th>العرض بالمتجر 🌐</th><th class="admin-only">إجراء</th></tr></thead>
+                            <thead><tr><th>الصورة 🖼️</th><th>المجموعة</th><th>المنتج</th><th>وحدة البيع</th><th>المخزون المتوفر</th><th>الشراء (التكلفة)</th><th>بيع المفرد/الكيلو</th><th>بيع الجملة</th><th>العرض بالمتجر 🌐</th><th class="admin-only">إجراء</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -925,6 +953,26 @@
         requestAnimationFrame(animateParticles);
     }
     animateParticles();
+
+    /* ============================================================
+       Image Upload Converter (Base64)
+       ============================================================ */
+    function handleImageFileUpload(event) {
+        const file = event.target.files[0];
+        if(!file) return;
+        
+        if (file.size > 2 * 1024 * 1024) {
+            alert("حجم الصورة كبير! يرجى اختيار صورة بحجم أقل من 2 ميغابايت.");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("stock-image-url").value = e.target.result;
+            playSuccessSound();
+        };
+        reader.readAsDataURL(file);
+    }
 
     /* ============================================================
        3D Holographic Tilt Cards Mouse Event Handlers
@@ -1435,10 +1483,15 @@
             const badgeClass = isOut ? 'badge-danger' : (isLow ? 'badge-warning' : 'badge-success');
             const statusText = isOut ? '<i class="fa-solid fa-xmark"></i> نفذت' : (isLow ? `<i class="fa-solid fa-triangle-exclamation"></i> قارب على النفاد (${item.qty} ${isKg?'كجم':'قطع'})` : `${item.qty} ${isKg?'كجم':'قطع'}`);
 
+            const imageThumbHTML = item.imageUrl ? `<img src="${escapeHTML(item.imageUrl)}" style="width:45px; height:45px; border-radius:10px; object-fit:cover; border:1px solid var(--accent-gold);">` : '';
+
             container.innerHTML += `
                 <div class="price-item-card">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="margin:0; font-size:15px; color:#fff;">${escapeHTML(item.name)} ${isKg?'⚖️':''}</h3>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            ${imageThumbHTML}
+                            <h3 style="margin:0; font-size:15px; color:#fff;">${escapeHTML(item.name)} ${isKg?'⚖️':''}</h3>
+                        </div>
                         <span class="badge badge-gold">${escapeHTML(item.group)}</span>
                     </div>
                     <div>
@@ -1479,9 +1532,12 @@
             if(filterGroup && item.group !== filterGroup) return;
             const isKg = item.unitType === 'kg';
             const isLow = item.qty <= 5;
+            const imgHTML = item.imageUrl ? `<img src="${escapeHTML(item.imageUrl)}" style="width:50px; height:50px; border-radius:12px; object-fit:cover; margin:0 auto 6px auto; border:1px solid var(--accent-gold);">` : '';
+
             pBox.innerHTML += `
                 <div class="pos-card" id="pos-card-${item.id}" onclick="triggerFlyToCart(event, '${item.id}'); addToCart('${item.id}')">
                     <div>
+                        ${imgHTML}
                         <span class="badge badge-gold">${escapeHTML(item.group)} ${isKg?'⚖️':''}</span>
                         <h4>${escapeHTML(item.name)}</h4>
                     </div>
@@ -1538,6 +1594,7 @@
         playBeepSound();
         const group = document.getElementById('stock-group-filter').value;
         const name = document.getElementById('stock-item-select').value;
+        const imageUrl = document.getElementById('stock-image-url').value.trim();
         const unitType = document.getElementById('stock-unit-type').value;
         const type = document.getElementById('stock-type').value;
         const costPrice = parseFloat(document.getElementById('stock-cost-price').value);
@@ -1550,7 +1607,7 @@
         let calculatedQty = (type === 'single') ? parseFloat(document.getElementById('stock-qty').value) : (piecesPerPack * parseFloat(document.getElementById('stock-packs-qty').value));
         
         batchItemsList.push({
-            name, group, unitType, qty: calculatedQty, type,
+            name, group, imageUrl, unitType, qty: calculatedQty, type,
             singleCost: (type === 'single') ? costPrice : (costPrice / piecesPerPack),
             singleSell: (type === 'single') ? sellPrice : (sellPrice / piecesPerPack),
             wholesaleSell: (type === 'wholesale') ? sellPrice : (sellPrice * piecesPerPack),
@@ -1603,6 +1660,7 @@
                     singleCost: item.singleCost,
                     singleSell: item.singleSell,
                     wholesaleSell: item.wholesaleSell,
+                    imageUrl: item.imageUrl || existing.imageUrl || '',
                     showInShop: (item.showInShop !== undefined) ? item.showInShop : (existing.showInShop || false)
                 });
             } else {
@@ -1936,18 +1994,18 @@
             const isOut = p.qty <= 0;
             const stockBadge = isOut ? `<span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> نفذت</span>` : (isLow ? `<span class="badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i> ${p.qty} ${isKg?'كجم':'قطع'}</span>` : `<span class="badge badge-success">${p.qty} ${isKg?'كجم':'قطع'}</span>`);
             
-            // زر التبديل والتحكم بنشر المادة في متجر الأونلاين
             const isVisibleInShop = p.showInShop !== false;
             const shopToggleBtn = isVisibleInShop 
                 ? `<button class="btn-success btn-table" onclick="toggleShopVisibility('${p.id}', false)"><i class="fa-solid fa-globe"></i> معروض بالمتجر</button>`
                 : `<button class="btn-secondary btn-table" onclick="toggleShopVisibility('${p.id}', true)"><i class="fa-solid fa-eye-slash"></i> مخفي من المتجر</button>`;
 
+            const imageColHTML = p.imageUrl ? `<img src="${escapeHTML(p.imageUrl)}" style="width:36px; height:36px; border-radius:8px; object-fit:cover; border:1px solid var(--accent-gold);">` : '<span style="color:var(--text-secondary); font-size:11px;">بدون صورة</span>';
+
             const actions = (currentUserRole === 'admin') ? `<td><button class="btn-danger btn-table" onclick="deleteInventoryRow('${p.id}')"><i class="fa-solid fa-trash-can"></i> حذف</button></td>` : `<td class="admin-only">-</td>`;
-            invBody.innerHTML += `<tr><td><span class="badge badge-gold">${escapeHTML(p.group)}</span></td><td><strong>${escapeHTML(p.name)}</strong></td><td>${unitLabel}</td><td>${stockBadge}</td><td>${(p.singleCost||0).toLocaleString()} د.ع</td><td>${(p.singleSell||0).toLocaleString()} د.ع</td><td>${isKg ? '-' : (p.wholesaleSell||0).toLocaleString() + ' د.ع'}</td><td>${shopToggleBtn}</td>${actions}</tr>`;
+            invBody.innerHTML += `<tr><td>${imageColHTML}</td><td><span class="badge badge-gold">${escapeHTML(p.group)}</span></td><td><strong>${escapeHTML(p.name)}</strong></td><td>${unitLabel}</td><td>${stockBadge}</td><td>${(p.singleCost||0).toLocaleString()} د.ع</td><td>${(p.singleSell||0).toLocaleString()} د.ع</td><td>${isKg ? '-' : (p.wholesaleSell||0).toLocaleString() + ' د.ع'}</td><td>${shopToggleBtn}</td>${actions}</tr>`;
         });
     }
 
-    // دالة تغيير حالة العرض بالمتجر
     function toggleShopVisibility(itemId, show) {
         playBeepSound();
         db.collection("inventory").doc(itemId).update({ showInShop: show });
