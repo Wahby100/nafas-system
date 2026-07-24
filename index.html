@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nafas Enterprise System | نظام إدارة النفَس </title>
+    <title>Nafas Enterprise System | نظام إدارة النفَس (v1.7)</title>
     <!-- مكتبة أكسل -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- مكتبة QR Code -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- مكتبة Confetti الاحتفالية -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- مكتبة تحويل HTML إلى صورة PNG عالية الدقة -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <!-- خط Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome 6 Icons CDN -->
@@ -285,7 +288,7 @@
         <div class="login-card glass-panel">
             <img src="logo.png" alt="Nafas Logo" class="login-logo" onerror="this.style.display='none';">
             <h1 style="color: #fff; font-size: 24px; margin-bottom: 5px; font-weight: 800;">نظام نفَس | Nafas System</h1>
-            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 25px;">قم بتسجيل الدخول للوصول للكاشير والإدارة <span class="version-badge">v1.6</span></p>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 25px;">قم بتسجيل الدخول للوصول للكاشير والإدارة <span class="version-badge">v1.7</span></p>
             
             <form id="login-form">
                 <div class="form-group" style="text-align: right;">
@@ -310,7 +313,7 @@
             <div>
                 <div class="sidebar-brand">
                     <img src="logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none';">
-                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v1.6</span></h2></div>
+                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v1.7</span></h2></div>
                 </div>
 
                 <div class="nav-menu">
@@ -341,7 +344,7 @@
                 </div>
 
                 <div class="sidebar-footer">
-                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v1.6</span></div>
+                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v1.7</span></div>
                     <div>📧 wahby.razaq100@gmail.com</div>
                     <div>📞 07811880089</div>
                 </div>
@@ -352,7 +355,7 @@
         <div class="main-content">
             
             <div class="top-bar glass-panel">
-                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v1.6</span></div>
+                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v1.7</span></div>
                 <div style="font-size:13px; color:var(--text-secondary); font-weight:700;" id="live-clock">--:--:--</div>
             </div>
 
@@ -511,7 +514,7 @@
                             <input type="text" id="poster-badge" value="🔥 عرض خاص ومحدود 🔥" oninput="updatePosterPreview()">
                         </div>
 
-                        <button type="button" class="btn-primary" style="width:100%; margin-top:10px;" onclick="downloadPosterImage()"><i class="fa-solid fa-download"></i> تنزيل صورة البوست للسوشيال ميديا 📥</button>
+                        <button type="button" class="btn-primary" style="width:100%; margin-top:10px;" onclick="downloadPosterImage()"><i class="fa-solid fa-file-image"></i> تنزيل بوست الإعلان كصورة PNG مباشرة 📥</button>
                     </div>
 
                     <!-- Poster Live Canvas Preview Container -->
@@ -1260,7 +1263,7 @@
     }
 
     /* ============================================================
-       Social Media Poster Creator Generator Logic (v1.6 with Image Support)
+       Social Media Poster Creator Direct PNG Download Generator Logic (v1.7)
        ============================================================ */
     function populatePosterItemSelect() {
         const sel = document.getElementById("poster-item-select");
@@ -1318,10 +1321,27 @@
         }
     }
 
+    /* Direct HD PNG Image Download Logic */
     function downloadPosterImage() {
         playSuccessSound();
-        alert("🖼️ جاري تجهيز بوست الإعلان للتنزيل بصيغة عالية الدقة!");
-        window.print();
+        const card = document.getElementById("poster-preview-card");
+        if (!card) return;
+
+        html2canvas(card, {
+            scale: 2.5,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: "#070a12"
+        }).then(canvas => {
+            const link = document.createElement("a");
+            const title = document.getElementById("poster-title").value.trim() || "poster";
+            link.download = `بوست_إعلان_${title}_Nafas.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }).catch(err => {
+            alert("حدث خطأ أثناء تنزيل الصورة، جاري استخدام الطباعة المباشرة بديلاً: " + err.message);
+            window.print();
+        });
     }
 
     function renderOnlineOrdersTable(pendingOrders) {
