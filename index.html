@@ -270,8 +270,8 @@
         /* Thermal Printing Optimizations */
         @media print {
             body * { visibility: hidden; }
-            #receipt-modal, #receipt-modal *, #print-online-invoice-modal, #print-online-invoice-modal *, #purchase-invoice-modal, #purchase-invoice-modal * { visibility: visible; }
-            #receipt-modal, #print-online-invoice-modal, #purchase-invoice-modal { position: absolute; left: 0; top: 0; width: 100%; background: #fff; }
+            #receipt-modal, #receipt-modal *, #print-online-invoice-modal, #print-online-invoice-modal *, #purchase-invoice-modal, #purchase-invoice-modal *, #daily-closing-modal, #daily-closing-modal * { visibility: visible; }
+            #receipt-modal, #print-online-invoice-modal, #purchase-invoice-modal, #daily-closing-modal { position: absolute; left: 0; top: 0; width: 100%; background: #fff; }
             .no-print { display: none !important; }
             .receipt-card { width: 80mm; max-width: 100%; border-radius: 0; box-shadow: none; padding: 5mm; color: #000; font-size: 11px; border: none; animation: none; transform: none; }
             @page { size: 80mm auto; margin: 0; }
@@ -1239,6 +1239,7 @@
     const db = firebase.firestore();
 
     let currentUserRole = "user";
+    let currentUserEmail = "";
     let groups = []; let itemDirectory = []; let inventory = []; let sales = []; let systemUsers = []; let expenses = [];
     let onlineOrders = []; let purchases = [];
     let cart = []; let batchItemsList = [];
@@ -1249,6 +1250,7 @@
 
     auth.onAuthStateChanged(user => {
         if (user) {
+            currentUserEmail = user.email || "";
             db.collection("users").doc(user.uid).get().then(doc => {
                 let role = "user";
                 if(doc.exists && doc.data().role) role = doc.data().role.toLowerCase().trim();
@@ -2460,10 +2462,10 @@
         const todayStr = new Date().toLocaleDateString('en-CA');
         const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toLocaleDateString('en-CA');
-        const currentMonthStr = todayStr.substring(0, 7); // e.g. "2026-07"
+        const currentMonthStr = todayStr.substring(0, 7); 
 
         let filteredSales = sales.filter(s => {
-            if (!s.rawDate) return true;
+            if (!s || !s.rawDate) return true;
             if (periodFilter === 'today') return s.rawDate === todayStr;
             if (periodFilter === 'yesterday') return s.rawDate === yesterdayStr;
             if (periodFilter === 'month') return s.rawDate.startsWith(currentMonthStr);
@@ -2471,7 +2473,7 @@
         });
 
         let filteredExpenses = expenses.filter(e => {
-            if (!e.rawDate) return true;
+            if (!e || !e.rawDate) return true;
             if (periodFilter === 'today') return e.rawDate === todayStr;
             if (periodFilter === 'yesterday') return e.rawDate === yesterdayStr;
             if (periodFilter === 'month') return e.rawDate.startsWith(currentMonthStr);
@@ -2528,65 +2530,68 @@
     let currentZReportData = null;
 
     function openDailyClosingModal() {
-        playBeepSound();
-        const todayStr = new Date().toLocaleDateString('en-CA');
-        const todaySales = sales.filter(s => s.rawDate === todayStr);
-        const todayExpenses = expenses.filter(e => e.rawDate === todayStr);
+        try {
+            playBeepSound();
+            const todayStr = new Date().toLocaleDateString('en-CA');
+            const safeSales = Array.isArray(sales) ? sales : [];
+            const safeExpenses = Array.isArray(expenses) ? expenses : [];
 
-        let totalSales = 0;
-        let cashSales = 0;
-        let debtSales = 0;
-        let totalCOGS = 0;
+            const todaySales = safeSales.filter(s => s && (s.rawDate === todayStr || (s.date && s.date.includes(todayStr))));
+            const todayExpenses = safeExpenses.filter(e => e && (e.rawDate === todayStr || (e.date && e.date.includes(todayStr))));
 
-        todaySales.forEach(s => {
-            totalSales += (s.total || 0);
-            totalCOGS += (s.costTotal || 0);
-            if (s.paymentStatus === 'debt') {
-                debtSales += (s.total || 0);
-            } else {
-                cashSales += (s.total || 0);
-            }
-        });
+            let totalSales = 0;
+            let cashSales = 0;
+            let debtSales = 0;
+            let totalCOGS = 0;
 
-        let totalExpenses = 0;
-        todayExpenses.forEach(e => {
-            totalExpenses += (e.amount || 0);
-        });
+            todaySales.forEach(s => {
+                totalSales += (s.total || 0);
+                totalCOGS += (s.costTotal || 0);
+                if (s.paymentStatus === 'debt') {
+                    debtSales += (s.total || 0);
+                } else {
+                    cashSales += (s.total || 0);
+                }
+            });
 
-        const netProfit = totalSales - totalCOGS - totalExpenses;
-        const drawerCash = cashSales - totalExpenses;
+            let totalExpenses = 0;
+            todayExpenses.forEach(e => {
+                totalExpenses += (e.amount || 0);
+            });
 
-        currentZReportData = {
-            date: todayStr,
-            time: new Date().toLocaleTimeString('ar-EG'),
-            userEmail: currentUserEmail || 'admin@nafas.com',
-            totalSales: Math.round(totalSales),
-            cashSales: Math.round(cashSales),
-            debtSales: Math.round(debtSales),
-            totalCOGS: Math.round(totalCOGS),
-            totalExpenses: Math.round(totalExpenses),
-            netProfit: Math.round(netProfit),
-            drawerCash: Math.round(drawerCash),
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        };
+            const netProfit = totalSales - totalCOGS - totalExpenses;
+            const drawerCash = cashSales - totalExpenses;
 
-        document.getElementById("z-report-date-title").innerText = "تاريخ اليوم: " + todayStr + " (" + new Date().toLocaleTimeString('ar-EG') + ")";
-        document.getElementById("z-report-user-email").innerText = "المسؤول عن القفل: " + currentZReportData.userEmail;
-        document.getElementById("z-total-sales").innerText = Math.round(totalSales).toLocaleString() + " د.ع";
-        document.getElementById("z-cash-sales").innerText = Math.round(cashSales).toLocaleString() + " د.ع";
-        document.getElementById("z-debt-sales").innerText = Math.round(debtSales).toLocaleString() + " د.ع";
-        document.getElementById("z-cogs").innerText = Math.round(totalCOGS).toLocaleString() + " د.ع";
-        document.getElementById("z-expenses").innerText = Math.round(totalExpenses).toLocaleString() + " د.ع";
-        
-        const netProfitEl = document.getElementById("z-net-profit");
-        netProfitEl.innerText = Math.round(netProfit).toLocaleString() + " د.ع";
-        netProfitEl.style.color = netProfit >= 0 ? "#27ae60" : "#c0392b";
+            currentZReportData = {
+                date: todayStr,
+                time: new Date().toLocaleTimeString('ar-EG'),
+                userEmail: currentUserEmail || 'admin@nafas.com',
+                totalSales: Math.round(totalSales),
+                cashSales: Math.round(cashSales),
+                debtSales: Math.round(debtSales),
+                totalCOGS: Math.round(totalCOGS),
+                totalExpenses: Math.round(totalExpenses),
+                netProfit: Math.round(netProfit),
+                drawerCash: Math.round(drawerCash),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
 
-        document.getElementById("z-drawer-cash").innerText = Math.round(drawerCash).toLocaleString() + " د.ع";
+            document.getElementById("z-report-date-title").innerText = "تاريخ اليوم: " + todayStr + " (" + new Date().toLocaleTimeString('ar-EG') + ")";
+            document.getElementById("z-report-user-email").innerText = "المسؤول عن القفل: " + currentZReportData.userEmail;
+            document.getElementById("z-total-sales").innerText = Math.round(totalSales).toLocaleString() + " د.ع";
+            document.getElementById("z-cash-sales").innerText = Math.round(cashSales).toLocaleString() + " د.ع";
+            document.getElementById("z-debt-sales").innerText = Math.round(debtSales).toLocaleString() + " د.ع";
+            document.getElementById("z-cogs").innerText = Math.round(totalCOGS).toLocaleString() + " د.ع";
+            document.getElementById("z-expenses").innerText = Math.round(totalExpenses).toLocaleString() + " د.ع";
+            
+            const netProfitEl = document.getElementById("z-net-profit");
+            netProfitEl.innerText = Math.round(netProfit).toLocaleString() + " د.ع";
+            netProfitEl.style.color = netProfit >= 0 ? "#27ae60" : "#c0392b";
 
-        document.getElementById("daily-closing-modal").style.display = "flex";
-    }
+            document.getElementById("z-drawer-cash").innerText = Math.round(drawerCash).toLocaleString() + " د.ع";
 
+            document.getElementById("daily-closing-modal").style.display = "flex";
+        } catch(err) {
     function closeDailyClosingModal() {
         document.getElementById("daily-closing-modal").style.display = "none";
     }
