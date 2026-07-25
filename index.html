@@ -288,7 +288,7 @@
         <div class="login-card glass-panel">
             <img src="logo.png" alt="Nafas Logo" class="login-logo" onerror="this.style.display='none';">
             <h1 style="color: #fff; font-size: 24px; margin-bottom: 5px; font-weight: 800;">نظام نفَس | Nafas System</h1>
-            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 25px;">قم بتسجيل الدخول للوصول للكاشير والإدارة <span class="version-badge">v3.0</span></p>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 25px;">قم بتسجيل الدخول للوصول للكاشير والإدارة <span class="version-badge">v3.1</span></p>
             
             <form id="login-form">
                 <div class="form-group" style="text-align: right;">
@@ -314,7 +314,7 @@
             <div>
                 <div class="sidebar-brand">
                     <img src="logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none';">
-                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v3.0</span></h2></div>
+                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v3.1</span></h2></div>
                 </div>
 
                 <div class="nav-menu">
@@ -346,7 +346,7 @@
                 </div>
 
                 <div class="sidebar-footer">
-                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v3.0</span></div>
+                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v3.1</span></div>
                     <div>📧 wahby.razaq100@gmail.com</div>
                     <div>📞 07811880089</div>
                 </div>
@@ -357,7 +357,7 @@
         <div class="main-content">
             
             <div class="top-bar glass-panel">
-                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v3.0</span></div>
+                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v3.1</span></div>
                 <div style="font-size:13px; color:var(--text-secondary); font-weight:700;" id="live-clock">--:--:--</div>
             </div>
 
@@ -783,13 +783,26 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
                         <h2><i class="fa-solid fa-chart-pie"></i> تقارير المبيعات والأرباح الصافية والمصاريف 📊</h2>
                         <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                            <label style="font-size:12px; font-weight:bold;">الفترة الزمانية:</label>
-                            <select id="report-period-filter" onchange="renderReportsProfitTab()" style="padding:8px 12px; font-size:13px;">
-                                <option value="today">اليوم</option>
+                            <label style="font-size:12px; font-weight:bold;">تحديد فترة التقرير:</label>
+                            <select id="report-period-filter" onchange="toggleReportFilterFields()" style="padding:8px 12px; font-size:13px;">
+                                <option value="today">اليوم الحالي</option>
                                 <option value="yesterday">الأمس</option>
-                                <option value="month">هذا الشهر</option>
+                                <option value="month">الشهر الحالي</option>
+                                <option value="custom-date">تحديد يوم محدد 📅</option>
+                                <option value="custom-month">تحديد شهر محدد 🗓️</option>
                                 <option value="all">جميع الأوقات التاريخية</option>
                             </select>
+
+                            <div id="report-custom-date-box" style="display:none; align-items:center; gap:6px;">
+                                <label style="font-size:12px;">اختر اليوم:</label>
+                                <input type="date" id="report-custom-date" onchange="renderReportsProfitTab()" style="padding:6px 10px; font-size:13px; color:#fff; background:rgba(0,0,0,0.5); border:1px solid var(--accent-gold); border-radius:10px;">
+                            </div>
+
+                            <div id="report-custom-month-box" style="display:none; align-items:center; gap:6px;">
+                                <label style="font-size:12px;">اختر الشهر:</label>
+                                <input type="month" id="report-custom-month" onchange="renderReportsProfitTab()" style="padding:6px 10px; font-size:13px; color:#fff; background:rgba(0,0,0,0.5); border:1px solid var(--accent-gold); border-radius:10px;">
+                            </div>
+
                             <button type="button" class="btn-primary" onclick="exportReportsToExcel()"><i class="fa-solid fa-file-excel"></i> تصدير إكسل Excel 📥</button>
                         </div>
                     </div>
@@ -2456,6 +2469,25 @@
     /* ============================================================
        Smart Profit & Loss Tracker & Reports Engine
        ============================================================ */
+    function toggleReportFilterFields() {
+        const period = document.getElementById("report-period-filter") ? document.getElementById("report-period-filter").value : 'today';
+        const dateBox = document.getElementById("report-custom-date-box");
+        const monthBox = document.getElementById("report-custom-month-box");
+
+        if (dateBox) dateBox.style.display = (period === 'custom-date') ? 'flex' : 'none';
+        if (monthBox) monthBox.style.display = (period === 'custom-month') ? 'flex' : 'none';
+
+        const todayStr = new Date().toLocaleDateString('en-CA');
+        if (period === 'custom-date' && document.getElementById("report-custom-date") && !document.getElementById("report-custom-date").value) {
+            document.getElementById("report-custom-date").value = todayStr;
+        }
+        if (period === 'custom-month' && document.getElementById("report-custom-month") && !document.getElementById("report-custom-month").value) {
+            document.getElementById("report-custom-month").value = todayStr.substring(0, 7);
+        }
+
+        renderReportsProfitTab();
+    }
+
     function renderReportsProfitTab() {
         const periodFilter = document.getElementById("report-period-filter") ? document.getElementById("report-period-filter").value : 'today';
         const tbody = document.getElementById("reports-table-body");
@@ -2465,13 +2497,18 @@
         const todayStr = new Date().toLocaleDateString('en-CA');
         const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toLocaleDateString('en-CA');
-        const currentMonthStr = todayStr.substring(0, 7); 
+        const currentMonthStr = todayStr.substring(0, 7);
+
+        const customDateVal = document.getElementById("report-custom-date") ? document.getElementById("report-custom-date").value : '';
+        const customMonthVal = document.getElementById("report-custom-month") ? document.getElementById("report-custom-month").value : '';
 
         let filteredSales = sales.filter(s => {
             if (!s || !s.rawDate) return true;
             if (periodFilter === 'today') return s.rawDate === todayStr;
             if (periodFilter === 'yesterday') return s.rawDate === yesterdayStr;
             if (periodFilter === 'month') return s.rawDate.startsWith(currentMonthStr);
+            if (periodFilter === 'custom-date') return s.rawDate === customDateVal;
+            if (periodFilter === 'custom-month') return s.rawDate.startsWith(customMonthVal);
             return true;
         });
 
@@ -2480,6 +2517,8 @@
             if (periodFilter === 'today') return e.rawDate === todayStr;
             if (periodFilter === 'yesterday') return e.rawDate === yesterdayStr;
             if (periodFilter === 'month') return e.rawDate.startsWith(currentMonthStr);
+            if (periodFilter === 'custom-date') return e.rawDate === customDateVal;
+            if (periodFilter === 'custom-month') return e.rawDate.startsWith(customMonthVal);
             return true;
         });
 
@@ -2506,10 +2545,12 @@
         netProfitEl.innerText = Math.round(netProfit).toLocaleString() + " د.ع";
         netProfitEl.style.color = netProfit >= 0 ? "var(--success)" : "var(--danger)";
 
-        let periodLabel = "اليوم";
-        if (periodFilter === 'yesterday') periodLabel = "الأمس";
-        if (periodFilter === 'month') periodLabel = "هذا الشهر (" + currentMonthStr + ")";
-        if (periodFilter === 'all') periodLabel = "جميع الفترات";
+        let periodLabel = "اليوم الحالي";
+        if (periodFilter === 'yesterday') periodLabel = "الأمس (" + yesterdayStr + ")";
+        if (periodFilter === 'month') periodLabel = "الشهر الحالي (" + currentMonthStr + ")";
+        if (periodFilter === 'custom-date') periodLabel = "تاريخ يوم محدد (" + (customDateVal || todayStr) + ")";
+        if (periodFilter === 'custom-month') periodLabel = "تاريخ شهر محدد (" + (customMonthVal || currentMonthStr) + ")";
+        if (periodFilter === 'all') periodLabel = "جميع الفترات التاريخية";
 
         tbody.innerHTML = `
             <tr>
