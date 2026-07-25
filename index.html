@@ -269,15 +269,56 @@
             box-shadow: 0 25px 50px rgba(243, 156, 18, 0.25);
         }
 
-        /* Thermal Printing Optimizations */
-        @media print {
-            body * { visibility: hidden; }
-            #receipt-modal, #receipt-modal *, #print-online-invoice-modal, #print-online-invoice-modal *, #purchase-invoice-modal, #purchase-invoice-modal * { visibility: visible; }
-            #receipt-modal, #print-online-invoice-modal, #purchase-invoice-modal { position: absolute; left: 0; top: 0; width: 100%; background: #fff; }
-            .no-print { display: none !important; }
-            .receipt-card { width: 80mm; max-width: 100%; border-radius: 0; box-shadow: none; padding: 5mm; color: #000; font-size: 11px; border: none; animation: none; transform: none; }
-            @page { size: 80mm auto; margin: 0; }
+        /* ☀️ Ultra-Clean Day / Light Mode Theme for POS System */
+        body.pos-day-mode {
+            --bg-dark: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.92);
+            --bg-card-hover: rgba(255, 255, 255, 1);
+            --border-glow: rgba(217, 119, 6, 0.35);
+            --accent-gold: #d97706;
+            --accent-orange: #c2410c;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --success: #059669;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --info: #2563eb;
+            background-color: #f1f5f9;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(217, 119, 6, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(37, 99, 235, 0.06) 0px, transparent 50%);
+            color: #0f172a;
         }
+
+        body.pos-day-mode .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-left: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.06);
+        }
+
+        body.pos-day-mode .sidebar-title h2 { color: #0f172a; }
+        body.pos-day-mode .user-profile { background: rgba(0, 0, 0, 0.04); border-color: rgba(0, 0, 0, 0.08); }
+        body.pos-day-mode .user-profile strong { color: #0f172a !important; }
+        body.pos-day-mode .sidebar-footer { border-top-color: rgba(0, 0, 0, 0.08); color: #475569; }
+        body.pos-day-mode input, body.pos-day-mode select {
+            background: rgba(255, 255, 255, 0.95); color: #0f172a; border-color: rgba(0, 0, 0, 0.2);
+        }
+        body.pos-day-mode td { background: rgba(255, 255, 255, 0.85); color: #0f172a; border-top-color: rgba(0, 0, 0, 0.06); border-bottom-color: rgba(0, 0, 0, 0.06); }
+        body.pos-day-mode th { color: #334155; }
+        body.pos-day-mode tr:hover td { background: rgba(241, 245, 249, 0.95); }
+        body.pos-day-mode .cart-box { background: rgba(255, 255, 255, 0.95); border-color: rgba(217, 119, 6, 0.4); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06); }
+        body.pos-day-mode .pos-card { background: rgba(255, 255, 255, 0.9); border-color: rgba(0, 0, 0, 0.1); }
+        body.pos-day-mode .pos-card:hover { background: #ffffff; border-color: #d97706; }
+        body.pos-day-mode .pos-card h4 { color: #0f172a; }
+        body.pos-day-mode .cash-calculator-panel { background: rgba(0, 0, 0, 0.03); border-color: rgba(217, 119, 6, 0.3); }
+        body.pos-day-mode .cash-quick-btn { background: rgba(0, 0, 0, 0.06); border-color: rgba(0, 0, 0, 0.12); color: #0f172a; }
+        body.pos-day-mode .cash-quick-btn:hover { background: #d97706; color: #fff; }
+        body.pos-day-mode #login-screen { background: #f1f5f9; }
+        body.pos-day-mode .login-card { background: rgba(255, 255, 255, 0.95); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); border-color: rgba(217, 119, 6, 0.3); }
+        body.pos-day-mode .login-card h1 { color: #0f172a !important; }
+        body.pos-day-mode .top-bar { background: rgba(255, 255, 255, 0.9); border-color: rgba(0,0,0,0.08); }
+        body.pos-day-mode .status-badge { background: rgba(5, 150, 105, 0.1); color: #059669; border-color: rgba(5, 150, 105, 0.3); }
+        body.pos-day-mode h2, body.pos-day-mode h3, body.pos-day-mode h4 { color: #0f172a; }
     </style>
 </head>
 <body>
@@ -359,8 +400,11 @@
         <div class="main-content">
             
             <div class="top-bar glass-panel">
-                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v3.1</span></div>
-                <div style="font-size:13px; color:var(--text-secondary); font-weight:700;" id="live-clock">--:--:--</div>
+                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v3.2</span></div>
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <button type="button" id="pos-theme-btn" class="btn-secondary" style="border-radius:18px; font-size:12px; padding:5px 12px; font-weight:800; cursor:pointer;" onclick="togglePosDayMode()"><i class="fa-solid fa-sun" style="color:#f59e0b;"></i> <span>الوضع النهاري</span></button>
+                    <div style="font-size:13px; color:var(--text-secondary); font-weight:700;" id="live-clock">--:--:--</div>
+                </div>
             </div>
 
             <div id="low-stock-alert-container" class="alert-box" style="display: none;">
@@ -1299,6 +1343,31 @@
     });
 
     function logout() { auth.signOut().then(() => { location.reload(); }); }
+
+    /* ============================================================
+       Safe Non-Destructive POS Day / Night Mode Engine
+       ============================================================ */
+    function togglePosDayMode() {
+        const isDay = document.body.classList.toggle('pos-day-mode');
+        const btn = document.getElementById('pos-theme-btn');
+        if (isDay) {
+            localStorage.setItem('nafas_pos_daymode', 'enabled');
+            if (btn) btn.innerHTML = `<i class="fa-solid fa-moon" style="color:#a855f7;"></i> <span>الوضع الليلي</span>`;
+        } else {
+            localStorage.setItem('nafas_pos_daymode', 'disabled');
+            if (btn) btn.innerHTML = `<i class="fa-solid fa-sun" style="color:#f59e0b;"></i> <span>الوضع النهاري</span>`;
+        }
+    }
+
+    (function initPosTheme() {
+        if (localStorage.getItem('nafas_pos_daymode') === 'enabled') {
+            document.body.classList.add('pos-day-mode');
+            window.addEventListener('DOMContentLoaded', () => {
+                const btn = document.getElementById('pos-theme-btn');
+                if (btn) btn.innerHTML = `<i class="fa-solid fa-moon" style="color:#a855f7;"></i> <span>الوضع الليلي</span>`;
+            });
+        }
+    })();
 
     function initRealtimeData() {
         db.collection("shopGroups").onSnapshot(snapshot => {
