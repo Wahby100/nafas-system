@@ -288,16 +288,16 @@
         <div class="login-card glass-panel">
             <img src="logo.png" alt="Nafas Logo" class="login-logo" onerror="this.style.display='none';">
             <h1 style="color: #fff; font-size: 24px; margin-bottom: 5px; font-weight: 800;">نظام نفَس | Nafas System</h1>
-            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 25px;">قم بتسجيل الدخول للوصول للكاشير والإدارة <span class="version-badge">v2.7</span></p>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 25px;">قم بتسجيل الدخول للوصول للكاشير والإدارة <span class="version-badge">v2.8</span></p>
             
             <form id="login-form">
                 <div class="form-group" style="text-align: right;">
                     <label>البريد الإلكتروني:</label>
-                    <input type="email" id="login-email" required placeholder="admin@nafas.com" value="admin@nafas.com">
+                    <input type="text" id="login-email" required placeholder="أدخل البريد الإلكتروني أو اسم المستخدم">
                 </div>
                 <div class="form-group" style="text-align: right; margin-bottom: 20px;">
                     <label>كلمة المرور:</label>
-                    <input type="password" id="login-password" required placeholder="••••••••" value="123456">
+                    <input type="password" id="login-password" required placeholder="••••••••">
                 </div>
                 <div id="login-error" style="color: var(--danger); font-size: 12px; margin-bottom: 12px; display: none;"></div>
                 <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; font-size: 15px;"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</button>
@@ -314,7 +314,7 @@
             <div>
                 <div class="sidebar-brand">
                     <img src="logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none';">
-                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v2.7</span></h2></div>
+                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v2.8</span></h2></div>
                 </div>
 
                 <div class="nav-menu">
@@ -347,7 +347,7 @@
                 </div>
 
                 <div class="sidebar-footer">
-                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v2.7</span></div>
+                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v2.8</span></div>
                     <div>📧 wahby.razaq100@gmail.com</div>
                     <div>📞 07811880089</div>
                 </div>
@@ -358,7 +358,7 @@
         <div class="main-content">
             
             <div class="top-bar glass-panel">
-                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v2.7</span></div>
+                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v2.8</span></div>
                 <div style="font-size:13px; color:var(--text-secondary); font-weight:700;" id="live-clock">--:--:--</div>
             </div>
 
@@ -1249,7 +1249,8 @@
 
     window.addEventListener('click', () => { getPosAudioContext(); }, { once: true });
 
-    function forceEnterSystem() {
+    function forceEnterSystem(customEmail) {
+        if (customEmail) currentUserEmail = customEmail;
         document.getElementById("logged-user-email").innerText = currentUserEmail || "admin@nafas.com";
         document.getElementById("logged-user-role").innerText = "مدير النظام";
         document.querySelectorAll(".admin-only").forEach(el => { el.style.display = ""; });
@@ -1261,7 +1262,7 @@
     auth.onAuthStateChanged(user => {
         if (user) {
             currentUserEmail = user.email || "admin@nafas.com";
-            forceEnterSystem();
+            forceEnterSystem(user.email);
 
             db.collection("users").doc(user.uid).get().then(doc => {
                 let role = "admin";
@@ -1283,12 +1284,17 @@
         const email = document.getElementById("login-email").value.trim();
         const password = document.getElementById("login-password").value.trim();
         
-        auth.signInWithEmailAndPassword(email, password).then(() => {
+        if(!email || !password) {
             forceEnterSystem();
+            return;
+        }
+
+        auth.signInWithEmailAndPassword(email, password).then(cred => {
+            forceEnterSystem(cred.user.email);
         }).catch(error => {
             console.error("Login auth error:", error);
-            // Allow entry even if offline / demo mode
-            forceEnterSystem();
+            // Always allow user entry using their typed account
+            forceEnterSystem(email);
         });
     });
 
