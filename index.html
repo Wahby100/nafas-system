@@ -267,6 +267,17 @@
             padding: 30px 24px; text-align: center; display: flex; flex-direction: column;
             justify-content: space-between; position: relative; overflow: hidden;
             box-shadow: 0 25px 50px rgba(243, 156, 18, 0.25);
+            transition: all 0.4s ease;
+        }
+
+        @keyframes reelPulseGlow {
+            0% { transform: scale(1); box-shadow: 0 25px 50px rgba(243, 156, 18, 0.25); }
+            50% { transform: scale(1.02); box-shadow: 0 35px 70px rgba(243, 156, 18, 0.55), 0 0 30px rgba(0, 242, 254, 0.4); }
+            100% { transform: scale(1); box-shadow: 0 25px 50px rgba(243, 156, 18, 0.25); }
+        }
+
+        .reel-animated-card {
+            animation: reelPulseGlow 3s ease-in-out infinite !important;
         }
 
         /* ☀️ Ultra-Clean Day / Light Mode Theme for POS System */
@@ -331,7 +342,7 @@
         <div class="login-card glass-panel">
             <img src="logo.png" alt="Nafas Logo" class="login-logo" onerror="this.style.display='none';">
             <h1 style="color: #fff; font-size: 24px; margin-bottom: 5px; font-weight: 800;">نظام نفَس | Nafas System</h1>
-            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 25px;">قم بتسجيل الدخول للوصول للكاشير والإدارة <span class="version-badge">v3.1</span></p>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 25px;">قم بتسجيل الدخول للوصول للكاشير والإدارة <span class="version-badge">v3.3</span></p>
             
             <form id="login-form">
                 <div class="form-group" style="text-align: right;">
@@ -357,7 +368,7 @@
             <div>
                 <div class="sidebar-brand">
                     <img src="logo.png" alt="Logo" class="sidebar-logo" onerror="this.style.display='none';">
-                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v3.1</span></h2></div>
+                    <div class="sidebar-title"><h2>نظام <span>Nafas</span> <span class="version-badge">v3.3</span></h2></div>
                 </div>
 
                 <div class="nav-menu">
@@ -367,7 +378,7 @@
                         <span class="notify-badge" id="pending-orders-badge" style="display: none;">0</span>
                     </button>
                     <button class="nav-btn" onclick="openTab('pos-tab', this)"><i class="fa-solid fa-cart-shopping"></i> <span>واجهة الكاشير (POS)</span></button>
-                    <button class="nav-btn" onclick="openTab('poster-creator-tab', this)"><i class="fa-solid fa-palette"></i> <span>صانع بوستات الإعلانات 🎨</span></button>
+                    <button class="nav-btn" onclick="openTab('poster-creator-tab', this)"><i class="fa-solid fa-palette"></i> <span>صانع الاستوريات والريلز 🎬</span></button>
                     <button class="nav-btn" onclick="openTab('inventory-tab', this)"><i class="fa-solid fa-boxes-stacked"></i> <span>إدارة المخزون والصور 🖼️</span></button>
                     <button class="nav-btn" onclick="openTab('sales-tab', this)"><i class="fa-solid fa-receipt"></i> <span>سجل المبيعات</span></button>
                     <button class="nav-btn" onclick="openTab('purchases-tab', this)"><i class="fa-solid fa-truck-field"></i> <span>فواتير توريد الشراء</span></button>
@@ -389,7 +400,7 @@
                 </div>
 
                 <div class="sidebar-footer">
-                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v3.1</span></div>
+                    <div>Designed by <strong>Wahby</strong> | <span class="version-badge">v3.3</span></div>
                     <div>📧 wahby.razaq100@gmail.com</div>
                     <div>📞 07811880089</div>
                 </div>
@@ -400,7 +411,7 @@
         <div class="main-content">
             
             <div class="top-bar glass-panel">
-                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v3.2</span></div>
+                <div class="status-badge"><i class="fa-solid fa-globe"></i> السيرفر السحابي متصل ويعمل بنجاح | <span class="version-badge">الإصدار v3.3</span></div>
                 <div style="display:flex; gap:12px; align-items:center;">
                     <button type="button" id="pos-theme-btn" class="btn-secondary" style="border-radius:18px; font-size:12px; padding:5px 12px; font-weight:800; cursor:pointer;" onclick="togglePosDayMode()"><i class="fa-solid fa-sun" style="color:#f59e0b;"></i> <span>الوضع النهاري</span></button>
                     <div style="font-size:13px; color:var(--text-secondary); font-weight:700;" id="live-clock">--:--:--</div>
@@ -532,37 +543,58 @@
                 </div>
             </div>
 
-            <!-- Social Media Poster Creator Tab -->
+            <!-- Social Media Poster & Reels Creator Tab Pro Studio -->
             <div id="poster-creator-tab" class="tab-content">
                 <div class="grid" style="display:grid; grid-template-columns: 1fr 1.2fr; gap:20px; align-items:start;">
                     <div class="card glass-panel">
-                        <h2><i class="fa-solid fa-palette"></i> صانع بوستات الإعلانات للسوشيال ميديا 🎨</h2>
-                        <p style="font-size:12px; color:var(--text-secondary);">اختر المادة أو أدخل بيانات العرض لتوليد بوست ترويجي فاخر ومصمم بنمط Instagram Story 9:16!</p>
+                        <h2><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent-gold);"></i> صانع الاستوريات والريلز والإعلانات (Reels & Story Studio Pro) 🎬</h2>
+                        <p style="font-size:12px; color:var(--text-secondary);">استوديو احترافي متكامل لتصميم وصناعة ريلز واستوريات إنستغرام وتيك توك بنمط 9:16 مع مؤثرات وفلاتر فاخرة!</p>
                         
                         <div class="form-group">
-                            <label>اختر قالب / ثيم الستوري (Global Story Studio):</label>
+                            <label>اختر قالب / ثيم الاستوري والريلز (Story & Reel Theme):</label>
                             <select id="poster-theme-select" onchange="updatePosterTheme()">
                                 <option value="royal">👑 1. الثيم الذهبي والأسود الملكي (Royal Obsidian)</option>
                                 <option value="ember">🔥 2. ثيم النار والدخان المشتعل (Neon Ember Smoke)</option>
-                                <option value="modern">💎 3. ثيم الفخامة المودرن (Modern Minimalist)</option>
+                                <option value="modern">💎 3. ثيم اللؤلؤ والمودرن الفاخر (Modern Pearl)</option>
+                                <option value="cyber">💜 4. النيون البنفسجي الساخر (Cyberpunk Purple)</option>
+                                <option value="emerald">🌿 5. الأخضر الزمردي الفخم (Emerald Velvet)</option>
+                                <option value="vip">⚡ 6. الثيم الذهبي البلاتيني VIP (VIP Platinum)</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label>اختر مادة من المخزن للتصميم السريع:</label>
                             <select id="poster-item-select" onchange="loadPosterItemData()">
-                                <option value="">-- اختر مادة --</option>
+                                <option value="">-- اختر مادة من المخزون --</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>عنوان المنتج / العرض:</label>
+                            <label>عنوان المنتج / العرض الرئيسي:</label>
                             <input type="text" id="poster-title" placeholder="أدخل اسم المنتَج أو عنوان العرض..." oninput="updatePosterPreview()">
                         </div>
 
                         <div class="form-group">
-                            <label>صورة المنتج للبوست (اختياري / أو يتم جلبها تلقائياً):</label>
-                            <input type="url" id="poster-image-url" placeholder="ضع رابط صورة أو سيتم استخدام صورة المنتج المحددة..." oninput="updatePosterPreview()">
+                            <label>رابط صورة المنتج (أو يتم جلبها تلقائياً عند اختيار المادة):</label>
+                            <input type="url" id="poster-image-url" placeholder="رابط الصورة..." oninput="updatePosterPreview()">
+                        </div>
+
+                        <!-- Advanced Image Controls: Filter & Scale -->
+                        <div class="form-row">
+                            <div>
+                                <label>فلتر معالجة الصورة 🎨:</label>
+                                <select id="poster-filter-select" onchange="updatePosterPreview()">
+                                    <option value="none">عادي (Original)</option>
+                                    <option value="gold">توهج ذهبي (Golden Glow)</option>
+                                    <option value="contrast">تباين عالي (High Contrast)</option>
+                                    <option value="noir">سينمائي أبيض وأسود (Noir B&W)</option>
+                                    <option value="warm">دفء سينمائي (Warm Cinema)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>حجم ومقياس الصورة 🔍:</label>
+                                <input type="range" id="poster-img-scale" min="70" max="150" value="100" oninput="updatePosterPreview()" style="margin-top:8px;">
+                            </div>
                         </div>
 
                         <div class="form-row">
@@ -571,29 +603,38 @@
                         </div>
 
                         <div class="form-group">
-                            <label>شارة العرض الخاصة (Badge):</label>
+                            <label>شارة العرض الترويجية (Badge):</label>
                             <input type="text" id="poster-badge" value="🔥 عرض خاص ومحدود 🔥" oninput="updatePosterPreview()">
                         </div>
 
-                        <button type="button" class="btn-primary" style="width:100%; margin-top:10px;" onclick="downloadPosterImage()"><i class="fa-solid fa-file-image"></i> تنزيل بوست الإعلان كصورة PNG مباشرة 📥</button>
+                        <div class="form-group">
+                            <label>ملاحظة ترويجية إضافية (اختياري):</label>
+                            <input type="text" id="poster-extra-note" placeholder="مثال: توصيل مجاني لأول 10 طلبات 🛵" oninput="updatePosterPreview()">
+                        </div>
+
+                        <div style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
+                            <button type="button" class="btn-primary" style="flex:1.2; padding:12px;" onclick="downloadPosterImage()"><i class="fa-solid fa-download"></i> تنزيل الاستوري كصورة HD 📥</button>
+                            <button type="button" class="btn-secondary" style="flex:1; padding:12px;" onclick="toggleReelAnimationMode()" id="reel-anim-btn"><i class="fa-solid fa-play" style="color:#00f2fe;"></i> <span>معاينة حركية للريلز ▶️</span></button>
+                        </div>
                     </div>
 
                     <!-- Poster Live Canvas Preview Container (Instagram Story 9:16 Format) -->
                     <div class="card glass-panel" style="display:flex; justify-content:center; align-items:center; padding:20px;">
-                        <div id="poster-preview-card" dir="rtl">
+                        <div id="poster-preview-card" dir="rtl" class="story-preview-916">
                             <div style="border-bottom:1px dashed rgba(243,156,18,0.4); padding-bottom:14px;">
-                                <img src="logo.png" style="width:75px; height:75px; border-radius:50%; border:2px solid var(--accent-gold);" onerror="this.style.display='none';">
+                                <img src="logo.png" style="width:75px; height:75px; border-radius:50%; border:2px solid var(--accent-gold); box-shadow:0 0 20px rgba(243,156,18,0.5);" onerror="this.style.display='none';">
                                 <h1 style="margin:8px 0 6px 0; font-size:24px; font-weight:800; color:#fff;" id="poster-brand-title">متجر نفَس | Nafas Shop</h1>
-                                <span style="background:var(--accent-gold); color:#000; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:800;" id="poster-card-badge">🔥 عرض خاص ومحدود 🔥</span>
+                                <span style="background:var(--accent-gold); color:#000; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:800; display:inline-block;" id="poster-card-badge">🔥 عرض خاص ومحدود 🔥</span>
                             </div>
 
                             <!-- Product Image inside Poster Preview -->
-                            <div id="poster-img-box" style="display:none; margin:16px 0; flex:1; align-items:center; justify-content:center;">
-                                <img id="poster-card-img" src="" style="width:100%; max-height:360px; border-radius:20px; object-fit:contain; background:rgba(0,0,0,0.5); padding:6px; border:1px solid var(--accent-gold); box-shadow:0 10px 30px rgba(0,0,0,0.7);">
+                            <div id="poster-img-box" style="display:none; margin:16px 0; flex:1; align-items:center; justify-content:center; overflow:hidden;">
+                                <img id="poster-card-img" src="" style="width:100%; max-height:360px; border-radius:20px; object-fit:contain; background:rgba(0,0,0,0.5); padding:6px; border:1.5px solid var(--accent-gold); box-shadow:0 10px 30px rgba(0,0,0,0.7); transition: transform 0.2s ease;">
                             </div>
 
                             <div style="margin:16px 0;">
-                                <h2 style="font-size:26px; font-weight:800; color:#fff; margin-bottom:12px; line-height:1.3;" id="poster-card-title">اسم المنتج والعرض هنا</h2>
+                                <h2 style="font-size:26px; font-weight:800; color:#fff; margin-bottom:10px; line-height:1.3;" id="poster-card-title">اسم المنتج والعرض هنا</h2>
+                                <div id="poster-card-extra-note" style="font-size:13px; color:var(--accent-gold); font-weight:700; margin-bottom:8px; display:none;"></div>
                                 <div style="display:flex; justify-content:center; align-items:center; gap:14px;">
                                     <span style="font-size:18px; color:var(--danger); text-decoration:line-through; display:none;" id="poster-card-old-price">0 د.ع</span>
                                     <span style="font-size:32px; font-weight:900; color:var(--success); text-shadow:0 0 20px rgba(16,185,129,0.6);" id="poster-card-new-price">0 د.ع</span>
@@ -2510,7 +2551,7 @@
 
     function deleteUserRow(id) { if(confirm('حذف صلاحية هذا الحساب؟')) { playRemoveSound(); db.collection("users").doc(id).delete(); } }
 
-    /* Global Story Studio Theme Switcher */
+    /* Global Story & Reel Studio Pro Theme Engine */
     function updatePosterTheme() {
         const theme = document.getElementById("poster-theme-select").value;
         const card = document.getElementById("poster-preview-card");
@@ -2534,6 +2575,94 @@
             document.getElementById("poster-brand-title").style.color = "#00f2fe";
             document.getElementById("poster-card-badge").style.background = "#00f2fe";
             document.getElementById("poster-card-badge").style.color = "#000000";
+        } else if (theme === 'cyber') {
+            card.style.background = "linear-gradient(145deg, #120320 0%, #290840 100%)";
+            card.style.border = "3px solid #a855f7";
+            document.getElementById("poster-brand-title").style.color = "#e9d5ff";
+            document.getElementById("poster-card-badge").style.background = "#a855f7";
+            document.getElementById("poster-card-badge").style.color = "#ffffff";
+        } else if (theme === 'emerald') {
+            card.style.background = "linear-gradient(145deg, #021a12 0%, #063826 100%)";
+            card.style.border = "3px solid #10b981";
+            document.getElementById("poster-brand-title").style.color = "#a7f3d0";
+            document.getElementById("poster-card-badge").style.background = "#10b981";
+            document.getElementById("poster-card-badge").style.color = "#000000";
+        } else if (theme === 'vip') {
+            card.style.background = "linear-gradient(145deg, #1c1917 0%, #44403c 100%)";
+            card.style.border = "3px solid #eab308";
+            document.getElementById("poster-brand-title").style.color = "#fef08a";
+            document.getElementById("poster-card-badge").style.background = "#eab308";
+            document.getElementById("poster-card-badge").style.color = "#000000";
+        }
+    }
+
+    function updatePosterPreview() {
+        const title = document.getElementById("poster-title") ? document.getElementById("poster-title").value.trim() : '';
+        const imgUrl = document.getElementById("poster-image-url") ? document.getElementById("poster-image-url").value.trim() : '';
+        const oldPrice = document.getElementById("poster-old-price") ? document.getElementById("poster-old-price").value : '';
+        const newPrice = document.getElementById("poster-new-price") ? document.getElementById("poster-new-price").value : '';
+        const badgeText = document.getElementById("poster-badge") ? document.getElementById("poster-badge").value.trim() : '';
+        const extraNote = document.getElementById("poster-extra-note") ? document.getElementById("poster-extra-note").value.trim() : '';
+        const filterVal = document.getElementById("poster-filter-select") ? document.getElementById("poster-filter-select").value : 'none';
+        const scaleVal = document.getElementById("poster-img-scale") ? document.getElementById("poster-img-scale").value : '100';
+
+        if (title) document.getElementById("poster-card-title").innerText = title;
+        if (badgeText) document.getElementById("poster-card-badge").innerText = badgeText;
+
+        const imgBox = document.getElementById("poster-img-box");
+        const imgEl = document.getElementById("poster-card-img");
+        if (imgUrl && imgBox && imgEl) {
+            imgEl.src = imgUrl;
+            imgBox.style.display = "flex";
+            
+            // Apply scale
+            imgEl.style.transform = `scale(${scaleVal / 100})`;
+
+            // Apply filter
+            if (filterVal === 'gold') imgEl.style.filter = "drop-shadow(0 0 15px #f39c12) sepia(0.3) saturate(1.4)";
+            else if (filterVal === 'contrast') imgEl.style.filter = "contrast(1.3) saturate(1.2)";
+            else if (filterVal === 'noir') imgEl.style.filter = "grayscale(1) contrast(1.4)";
+            else if (filterVal === 'warm') imgEl.style.filter = "sepia(0.4) hue-rotate(-20deg)";
+            else imgEl.style.filter = "none";
+        } else if (imgBox) {
+            imgBox.style.display = "none";
+        }
+
+        const noteEl = document.getElementById("poster-card-extra-note");
+        if (extraNote && noteEl) {
+            noteEl.innerText = extraNote;
+            noteEl.style.display = "block";
+        } else if (noteEl) {
+            noteEl.style.display = "none";
+        }
+
+        const oldPriceEl = document.getElementById("poster-card-old-price");
+        if (oldPrice && parseFloat(oldPrice) > 0 && oldPriceEl) {
+            oldPriceEl.innerText = parseFloat(oldPrice).toLocaleString() + " د.ع";
+            oldPriceEl.style.display = "inline";
+        } else if (oldPriceEl) {
+            oldPriceEl.style.display = "none";
+        }
+
+        const newPriceEl = document.getElementById("poster-card-new-price");
+        if (newPrice && parseFloat(newPrice) > 0 && newPriceEl) {
+            newPriceEl.innerText = parseFloat(newPrice).toLocaleString() + " د.ع";
+        }
+    }
+
+    function toggleReelAnimationMode() {
+        playBeepSound();
+        const card = document.getElementById("poster-preview-card");
+        const btn = document.getElementById("reel-anim-btn");
+        if (!card) return;
+
+        const isAnimated = card.classList.toggle("reel-animated-card");
+        if (isAnimated) {
+            btn.innerHTML = `<i class="fa-solid fa-pause" style="color:#ef4444;"></i> <span>إيقاف المعاينة ⏸️</span>`;
+            btn.className = "btn-danger";
+        } else {
+            btn.innerHTML = `<i class="fa-solid fa-play" style="color:#00f2fe;"></i> <span>معاينة حركية للريلز ▶️</span>`;
+            btn.className = "btn-secondary";
         }
     }
 
